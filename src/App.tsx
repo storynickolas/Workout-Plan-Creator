@@ -1,23 +1,68 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+import { Card, Button, CardBody, Text, SimpleGrid, UnorderedList, ListItem, ListIcon } from '@chakra-ui/react'
 import './App.css';
 
 function App() {
+  const [newName, setNewName] = useState(
+    [{
+      name: "",
+      time: 1,
+      workout_exercises: [
+          {
+              id: 0,
+              exercise: {
+                  id: 0,
+                  name: "",
+                  muscle_group: "",
+                  video: "",
+              },
+              reps: 0,
+              sets: 0
+          }
+    ]}]
+  )
+
+
+  function testClick() {
+
+    console.log(newName)
+  }
+
+
+  useEffect(() => {
+    fetch("http://localhost:3000/workouts").then((response) => {
+      if (response.ok) {
+        response.json().then((user) => 
+        {
+          setNewName(user)
+        });
+      }
+    });
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <Button onClick={() => testClick()}>Click Me</Button>
+        {/* {newName} */}
+        <h1>Workouts</h1>
+        <SimpleGrid columns={3} spacing={10}>
+        {
+        newName.map((item) => 
+                <Card >
+                <CardBody>
+                  <Text fontSize='2xl'>{item.name}</Text>
+                  <Text fontSize='md'>{item.time} Minutes</Text>
+                  <UnorderedList>{
+                  item.workout_exercises.map((info) => 
+                    <ListItem fontSize='md' textAlign='left'>
+                      {info.exercise.name} {info.reps}x{info.sets}
+                    </ListItem>)}
+                  </UnorderedList>
+                  </CardBody>
+                </Card>
+       )}
+       </SimpleGrid>
       </header>
     </div>
   );
