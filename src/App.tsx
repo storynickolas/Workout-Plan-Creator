@@ -1,4 +1,5 @@
 import './App.css';
+import { useState, createContext, useContext } from "react";
 import Workouts from './Pages/Workouts'
 import Exercises from './Pages/Exercises'
 import User from './Pages/User'
@@ -7,9 +8,18 @@ import { Route, Switch } from "react-router-dom";
 import Navbar from './Navbar';
 import NewProgram from './Pages/NewProgram';
 
+interface CurrentUserContextType {
+  user: string;
+}
+
+export const CurrentUserContext = createContext<CurrentUserContextType | null>(null);
+
+
 function App() {
+  const [user, setUser] = useState("Jesse Hall");
 
   return (
+    <CurrentUserContext.Provider value={{user: user}}>
     <div className="App">
       <header >
           <h1 color='white'>Workouts</h1>
@@ -29,10 +39,13 @@ function App() {
           <Exercises />
         </Route>
         <Route exact path="/myPage">
-          <User />
+          
+            <User />
+  
         </Route>
       </Switch>
     </div>
+              </CurrentUserContext.Provider>
   );
 }
 

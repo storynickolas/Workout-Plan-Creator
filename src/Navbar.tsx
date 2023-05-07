@@ -18,6 +18,9 @@ function Navbar() {
       <Link to={`/exercises`} >Exercises</Link>
       </Button>
       <Button>
+      <Link to={`/newProgram`}>Add A Workout</Link>
+      </Button>
+      <Button>
       <Link to={`/myPage`} >My Page</Link>
       </Button>
     </div>
