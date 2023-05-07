@@ -14,6 +14,12 @@ function Navbar() {
       <Button>
       <Link to={`/workouts`} >Workouts</Link>
       </Button>
+      <Button>
+      <Link to={`/exercises`} >Exercises</Link>
+      </Button>
+      <Button>
+      <Link to={`/myPage`} >My Page</Link>
+      </Button>
     </div>
   );
 }

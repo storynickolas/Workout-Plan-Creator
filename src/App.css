@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+.Home {
+  background: url("Weight\ Room.jpg") no-repeat center center fixed;
+  color: white;
+  min-height: 1000px;
+  max-width:100%;
+  /* margin-left: 10%;
+  padding-top: 10%; */
+}
+
+.Drop {
+  min-height: 200px;
+  min-width: 200px;
+  border-color: black;
+  border-width: thin medium thick;
+}

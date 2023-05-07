@@ -1,7 +1,11 @@
 import './App.css';
 import Workouts from './Pages/Workouts'
+import Exercises from './Pages/Exercises'
+import User from './Pages/User'
+import Home from './Pages/Home'
 import { Route, Switch } from "react-router-dom";
 import Navbar from './Navbar';
+import NewProgram from './Pages/NewProgram';
 
 function App() {
 
@@ -13,10 +17,19 @@ function App() {
         </header>
       <Switch>
         <Route exact path="/">
-            <Workouts />
+            <Home />
           </Route>
         <Route exact path="/workouts">
           <Workouts />
+        </Route>
+        <Route exact path="/newprogram">
+          <NewProgram />
+        </Route>
+        <Route exact path="/exercises">
+          <Exercises />
+        </Route>
+        <Route exact path="/myPage">
+          <User />
         </Route>
       </Switch>
     </div>
