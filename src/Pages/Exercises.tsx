@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Button, CardBody, Text, SimpleGrid, } from '@chakra-ui/react'
+import AddExercise from './ExerciseAdd';
 
 function Exercises() {
   const [newName, setNewName] = useState(
@@ -36,6 +37,7 @@ function Exercises() {
 
 {/* <iframe width="560" height="315" src="https://www.youtube.com/embed/roCP6wCXPqo" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ></iframe> */}
       {/* </AspectRatio> */}
+      <AddExercise />
       </SimpleGrid>
         <Button onClick={() => testClick()}>Click Me</Button>
         {/* {newName} */}
