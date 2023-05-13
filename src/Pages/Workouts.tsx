@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Button, CardBody, Text, SimpleGrid, UnorderedList, ListItem, ListIcon } from '@chakra-ui/react'
+import { Card, Button, CardBody, Text, SimpleGrid, UnorderedList, ListItem } from '@chakra-ui/react'
+import { StarIcon } from '@chakra-ui/icons'
 
 function Workouts() {
   const [newName, setNewName] = useState(
@@ -18,7 +19,14 @@ function Workouts() {
               reps: 0,
               sets: 0
           }
-    ]}]
+      ],
+      reviews: [
+        {
+            id: 0,
+            rating: 0,
+            write_up: ''
+      }]
+    }]
   )
 
   function testClick() {
@@ -51,12 +59,19 @@ function Workouts() {
                 <CardBody>
                   <Text fontSize='2xl'>{item.name}</Text>
                   <Text fontSize='md'>{item.time} Minutes</Text>
+                  {[
+                    ...Array(item.reviews[0].rating),
+                  ].map((value: undefined, index: number) => (
+                    <StarIcon w={5} h={5} color='gold' key={index}/>
+                  ))}
+            
                   <UnorderedList>{
                   item.workout_exercises.map((info) => 
                     <ListItem fontSize='md' textAlign='left'>
                       {info.exercise.name} {info.sets}x{info.reps}
                     </ListItem>)}
                   </UnorderedList>
+                  <Text fontSize='md' as='i'>"{item.reviews[0].write_up}"</Text>
                   </CardBody>
                 </Card>
        )}
@@ -67,3 +82,4 @@ function Workouts() {
 }
 
 export default Workouts;
+
