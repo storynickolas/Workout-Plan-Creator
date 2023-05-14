@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Button, CardBody, Text, SimpleGrid, AspectRatio, Box } from '@chakra-ui/react'
+import { Card, Button, CardBody, Text, SimpleGrid, AspectRatio, Box, Center } from '@chakra-ui/react'
 import AddExercise from './ExerciseAdd';
 
 function Exercises() {
@@ -18,12 +18,6 @@ function Exercises() {
       muscle_group: ''
     }
   )
-
-  function testClick() {
-
-    console.log(newName)
-  }
-
   function handleClick(item: {name: string,
   video: string,
   muscle_group: string}) {
@@ -41,48 +35,37 @@ function Exercises() {
         response.json().then((user) => 
         {
           setNewName(user)
-        });
+          handleClick(user[0])
+        })
       }
     });
   }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-      <SimpleGrid columns={1} spacing={10}>
-      <h1>Login to See Page</h1>
-      <Box bg='tomato' width='600px'>
-        <AspectRatio maxW='1000px' ratio={5 / 3}>
-         <iframe  src={selected.video} width="100%" title="YouTube video player" />
-     </AspectRatio>
-      </Box>
-
-           
-
-
-      <AddExercise />
+    <Box bg='grey' w='100%' h='100vh' p={4} color='white'>
+      <SimpleGrid columns={1} >
+        <Center >
+        <Box bg='tomato' width='600px' >
+          <AspectRatio maxW='1000px' ratio={5 / 3}>
+          <iframe  src={selected.video} width="100%" title="YouTube video player" />
+          </AspectRatio>
+          <Text fontSize='2xl'>{selected.name}</Text>
+        </Box>
+        </Center>
       </SimpleGrid>
-      
-        <Button onClick={() => testClick()}>Click Me</Button>
-        {/* {newName} */}
-        <h1>Exercises</h1>
-        <SimpleGrid columns={3} spacing={10}>
+        <Text fontSize='4xl'>Exercises</Text>
+        <SimpleGrid minChildWidth='200px' spacing='10px'>
         {
-        newName.map((item) => 
-        
-                <Card onClick={() => handleClick(item)}>
-
-                <CardBody>
-                  
-                  <Text fontSize='2xl'>{item.name}</Text>
-                  
-                  </CardBody>
-  
-                </Card>
+          newName.map((item) => 
+            <Card onClick={() => handleClick(item)} cursor='pointer'>
+              <CardBody> 
+                <Text fontSize='2xl'>{item.name}</Text>
+              </CardBody>
+            </Card>
        )}
        </SimpleGrid>
-      </header>
-    </div>
+       <AddExercise />
+    </Box>
   );
 }
 

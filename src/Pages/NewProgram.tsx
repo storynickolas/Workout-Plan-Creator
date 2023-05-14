@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FormControl, Button, FormLabel, Input, SimpleGrid, Card, CardBody, Text, Switch} from '@chakra-ui/react'
+import { FormControl, Button, FormLabel, Input, SimpleGrid, Card, CardBody, Text, Switch, Box, Center, HStack, VStack, StackDivider, Divider} from '@chakra-ui/react'
 // import AddButton from '../AddButton';
 import { Modal, ModalOverlay, ModalContent, ModalBody, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure} from '@chakra-ui/react'
 
@@ -13,6 +13,8 @@ function NewProgram() {
   const [workout, setWorkout] = useState('')
   const [time, setTime] = useState('')
   const [newW, setNewW] = useState({name: '', time: 0})
+
+  const [clicked, setClicked] = useState(false)
 
 
   function handleOver(e: React.ChangeEvent<any>) {
@@ -74,16 +76,42 @@ function NewProgram() {
       time: Number(time)
     }
     console.log(cow)
-    setNewW(cow)
+    fetch(`http://localhost:4000/workouts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: JSON.stringify(cow),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if(response.errors){
+          // setStatus(response.errors)
+          console.log(response.errors)
+        }
+        else {
+          // setStatus(['Successfully Added'])
+          // dispatch(addBeer(response));
+          setNewW(response)
+          console.log(response)
+        }
+      })
+
+
+    // console.log(cow)
+    // setNewW(cow)
+    setClicked(true)
     onClose()
 
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-      <Button onClick={onOpen}>Add a Workout</Button>
-      <Button onClick={() => console.log(selected)}>Test Button</Button>
+    <Box bg='grey' w='100%' h='100%' minH={'100vh'} p={4} color='white'>
+      {clicked ? '': <Button onClick={onOpen}>Add a Workout</Button>}
+      {clicked ? <Text fontSize='6xl'>{newW.name}</Text> : ''}
+      {clicked ? <Text fontSize='4xl'>{newW.time} minutes</Text> : ''}
+      {/* <Button onClick={() => console.log(selected)}>Test Button</Button> */}
 
       <Modal
         isOpen={isOpen}
@@ -113,23 +141,46 @@ function NewProgram() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+
+      <VStack
+  divider={<StackDivider borderColor='gray.200' />}
+  spacing={4}
+  align='stretch'
+>
+
     {
       list.map((item) => 
-        <Card w='80%' maxH='200px'>
-        <CardBody>
-          <Text fontSize='lg'>{item}</Text>
-          <SimpleGrid columns={2} spacing={0}>
+        <Card maxH='200px' >
+
+        <CardBody >
+          <Center >
+           <HStack spacing={8}>
+          <Text fontSize='xl'>{item}</Text>
+
             <Text fontSize='sm'>Reps</Text>
-            <Input defaultValue={12} size='sm'></Input>
+            <Input defaultValue={12} width={'50px'}></Input>
             <Text fontSize='sm'>Sets</Text>
-            <Input defaultValue={4} size='sm'></Input>
-          </SimpleGrid>
+            <Input defaultValue={4} width={'50px'}></Input>
+
           <Text fontSize='md'>Confirm:   <Switch size='lg' /></Text>
           <Button onClick={() => moreStuff(item)}>Remove</Button>
+              </HStack>
+              </Center>
           </CardBody>
+
         </Card>
       )}
-        <h1>Exercises</h1>
+      
+      </VStack>
+
+      {clicked ? <Card minWidth='90%'><div className='Drop' onDragOver={handleOver} onDrop={dropIt} >Add an Exercise</div></Card> : ''}
+
+
+
+
+
+        <Text fontSize={'4xl'}>Exercises</Text>
         <SimpleGrid columns={3} spacing={10}>
         {
         newName.map((item, index) => 
@@ -140,9 +191,8 @@ function NewProgram() {
         </Card>
        )}
        </SimpleGrid>
-       <div className='Drop' onDragOver={handleOver} onDrop={dropIt}>Add a Workout</div>
-       </header>
-    </div>
+       
+    </Box>
   );
 }
 
