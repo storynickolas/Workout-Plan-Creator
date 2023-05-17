@@ -6,6 +6,7 @@ function AddButton() {
 
   return (
     <>
+
       <Button onClick={onOpen}>Add a Workout</Button>
 
       <Modal

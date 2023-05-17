@@ -23,6 +23,9 @@ function Navbar() {
       <Button>
       <Link to={`/myPage`} >My Page</Link>
       </Button>
+      <Button>
+      <Link to={`/login`} >Login</Link>
+      </Button>
     </div>
   );
 }
