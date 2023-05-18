@@ -8,6 +8,7 @@ import Login from './Pages/Login'
 import { Route, Switch } from "react-router-dom";
 import Navbar from './Navbar';
 import NewProgram from './Pages/NewProgram';
+import Signup from './Pages/Signup';
 
 interface CurrentUserContextType {
   user: string;
@@ -17,7 +18,7 @@ export const CurrentUserContext = createContext<CurrentUserContextType | null>(n
 
 
 function App() {
-  const [user, setUser] = useState("Jesse Hall");
+  const [user, setUser] = useState("Tom");
 
   return (
     <CurrentUserContext.Provider value={{user: user}}>
@@ -40,13 +41,15 @@ function App() {
           <Exercises />
         </Route>
         <Route exact path="/myPage">
-          
             <User />
-  
         </Route>
+
         <Route exact path="/login">
-          
           <Login />
+      </Route>
+      <Route exact path="/signup">
+          
+          <Signup />
 
       </Route>
       </Switch>

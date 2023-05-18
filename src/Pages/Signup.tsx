@@ -10,7 +10,7 @@ import {
   Box,
   Avatar,
   InputRightElement,
-
+  Text,
   FormControl,
 
 } from "@chakra-ui/react";
@@ -19,7 +19,7 @@ import weights from '../Weights.jpg';
 
 
 
-const Login = () => {
+const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
 
 
@@ -42,7 +42,7 @@ const Login = () => {
         backgroundColor="white"
       >
         <Avatar bg="teal.500" />
-        <Heading color="teal.400">Welcome</Heading>
+        <Heading color="teal.400">Create an account</Heading>
           <form>
             <Stack
               spacing={4}
@@ -51,16 +51,34 @@ const Login = () => {
               justifyContent="center"
               alignItems="center"
             >  
+            <Text alignSelf='start'>Username</Text>
               <FormControl>
                 <InputGroup>
-                  <Input placeholder="username" />
+                  <Input />
                 </InputGroup>
               </FormControl>
+              <Text alignSelf='start'>Password</Text>
+              <FormControl>
+                
+                <InputGroup>
+                  
+                  <Input
+                    type={showPassword ? "text" : "password"}
+
+                  />
+                  <InputRightElement width="4.5rem">
+                    <Button h="1.75rem" size="sm" onClick={handleShowClick}>
+                      {showPassword ? "Hide" : "Show"}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+              </FormControl>
+              <Text alignSelf='start'>Confirm Password</Text>
               <FormControl>
                 <InputGroup>
                   <Input
                     type={showPassword ? "text" : "password"}
-                    placeholder="Password"
+
                   />
                   <InputRightElement width="4.5rem">
                     <Button h="1.75rem" size="sm" onClick={handleShowClick}>
@@ -81,19 +99,10 @@ const Login = () => {
               </Button>
             </Stack>
           </form>
-          <Box>
-            New to us?{" "}
-            <Button color="teal.500" >
 
-              <Link to={`/signup`}>
-                Sign Up
-              </Link>
-            </Button>
-            
-          </Box> 
       </Box>      
     </Flex>
   );
 };
 
-export default Login;
+export default Signup;
