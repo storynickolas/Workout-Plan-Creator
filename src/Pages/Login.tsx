@@ -10,17 +10,44 @@ import {
   Box,
   Avatar,
   InputRightElement,
-
+  Text,
   FormControl,
 
 } from "@chakra-ui/react";
 
 import weights from '../Weights.jpg';
+import { useHistory } from 'react-router-dom'
 
 
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState([]);
+  const [user, setUser] = useState([]);
+
+  const history = useHistory();
+
+  function handleSubmit(e: React.SyntheticEvent) {
+    e.preventDefault();
+    console.log('Test')
+    fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    }).then((r) => {
+      if (r.ok) {
+        r.json().then((user) => setUser(user.username));
+        history.push(`/mypage`)
+      } else {
+        r.json().then((err) => setErrors(err.errors));
+      }
+    });
+  }
 
 
   const handleShowClick = () => setShowPassword(!showPassword);
@@ -53,7 +80,7 @@ const Login = () => {
             >  
               <FormControl>
                 <InputGroup>
-                  <Input placeholder="username" />
+                  <Input placeholder="username" onChange={(e) => setUsername(e.target.value)} />
                 </InputGroup>
               </FormControl>
               <FormControl>
@@ -61,6 +88,7 @@ const Login = () => {
                   <Input
                     type={showPassword ? "text" : "password"}
                     placeholder="Password"
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                   <InputRightElement width="4.5rem">
                     <Button h="1.75rem" size="sm" onClick={handleShowClick}>
@@ -75,10 +103,12 @@ const Login = () => {
                 variant="solid"
                 colorScheme="teal"
                 width="full"
-                onClick={() => alert('Testing')}
+                onClick={(e) => handleSubmit(e)}
               >
                 Login
               </Button>
+              <Text>{errors}</Text>
+              <Text>{user}</Text>
             </Stack>
           </form>
           <Box>

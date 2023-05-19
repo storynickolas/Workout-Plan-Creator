@@ -76,7 +76,7 @@ function NewProgram() {
       time: Number(time)
     }
     console.log(cow)
-    fetch(`http://localhost:4000/workouts`, {
+    fetch(`/workouts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

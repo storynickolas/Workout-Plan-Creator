@@ -25,6 +25,40 @@ const Signup = () => {
 
   const handleShowClick = () => setShowPassword(!showPassword);
 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+
+  function handleSubmit(e: React.SyntheticEvent) {
+    e.preventDefault();
+    fetch("/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        password,
+        password_confirmation: passwordConfirmation,
+      }),
+    }).then((r) => {
+      if (r.ok) {
+        fetch("/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, password }),
+        })
+        r.json().then((user) => console.log(user.username));
+      }
+    });
+
+    console.log({
+      username,
+    })
+  }
+
   return (
 
     <Flex
@@ -54,7 +88,7 @@ const Signup = () => {
             <Text alignSelf='start'>Username</Text>
               <FormControl>
                 <InputGroup>
-                  <Input />
+                  <Input onChange={(e) => setUsername(e.target.value)}/>
                 </InputGroup>
               </FormControl>
               <Text alignSelf='start'>Password</Text>
@@ -64,6 +98,8 @@ const Signup = () => {
                   
                   <Input
                     type={showPassword ? "text" : "password"}
+                    onChange={(e) => setPassword(e.target.value)}
+      
 
                   />
                   <InputRightElement width="4.5rem">
@@ -78,6 +114,7 @@ const Signup = () => {
                 <InputGroup>
                   <Input
                     type={showPassword ? "text" : "password"}
+                    onChange={(e) => setPasswordConfirmation(e.target.value)}
 
                   />
                   <InputRightElement width="4.5rem">
@@ -93,9 +130,9 @@ const Signup = () => {
                 variant="solid"
                 colorScheme="teal"
                 width="full"
-                onClick={() => alert('Testing')}
+                onClick={(e) => handleSubmit(e)}
               >
-                Login
+                Sign Up
               </Button>
             </Stack>
           </form>

@@ -31,7 +31,7 @@ function Workouts() {
 
 
   useEffect(() => {
-    fetch("http://localhost:3000/workouts").then((response) => {
+    fetch("/workouts").then((response) => {
       if (response.ok) {
         response.json().then((user) => 
         {
