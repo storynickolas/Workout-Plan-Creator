@@ -3,8 +3,12 @@ import { Card, Center, AspectRatio, Button, CardBody, Text, SimpleGrid, Unordere
 import { AddIcon, StarIcon, InfoOutlineIcon } from '@chakra-ui/icons'
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router-dom'
+import { WorkoutContext } from '../Workout.context';
+import { useContext } from 'react';
 
-function Workout( {workoutList}: any) {
+
+function Workout( ) {
+  const workoutList = useContext(WorkoutContext);
   const [video, setVideo] = useState('')
   const [name, setName] = useState('')
   const history = useHistory();
@@ -17,17 +21,17 @@ function Workout( {workoutList}: any) {
     setVideo(info.exercise.video)
     setName(info.exercise.name)
   }
-
-
   
   const { id } = useParams<QuizParams>();
-  let cow = workoutList[Number(id) - 1]
-  console.log(cow.reviews)
+  let vw = Number(id) - 1
+  let cow: any = workoutList[vw]
+
   return (
     <Box bg='grey' w='100%' h='100vh' p={4} color='white'>
+      <Button onClick={() => console.log(cow)}>Test</Button>
       <Card>
       <SimpleGrid columns={1} >
-        {/* <Center > */}
+
       <Text fontSize='4xl'>{cow.name}</Text>
       <Text fontSize='2xl'>{cow.time} Minutes</Text>
       <Center>

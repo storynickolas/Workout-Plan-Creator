@@ -101,7 +101,7 @@ function App() {
 
       </Route>
       <Route exact path='/workouts/:id'>
-              <Workout  workoutList={workoutList}/>
+              <Workout />
             </Route>
       </Switch>
     </div>

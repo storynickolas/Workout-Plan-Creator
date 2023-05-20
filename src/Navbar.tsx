@@ -4,8 +4,19 @@ import { Button } from '@chakra-ui/react'
 // import { CurrentUserContext } from './App'
 
 
+
+
 function Navbar() {
-  // const user = useContext(CurrentUserContext);
+  const [user, setUser] = useState('')
+
+
+
+
+  useEffect(() => {
+      setUser(sessionStorage.getItem("user") || '')
+    }, []);
+
+    
 
   return (
     <div>
@@ -22,14 +33,14 @@ function Navbar() {
       <Button>
       <Link to={`/newProgram`}>Add A Workout</Link>
       </Button>
-      {/* {user && user.user !== 'Tom'  ?
+      {user !== 'Tom'  ?
       <Button>
       <Link to={`/myPage`} >My Page</Link>
       </Button>
       :
       <Button>
       <Link to={`/login`} >Login</Link>
-      </Button>} */}
+      </Button>}
     </div>
   );
 }

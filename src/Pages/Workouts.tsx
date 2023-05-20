@@ -62,7 +62,7 @@ function Workouts( ) {
                     </ListItem>)}
                   </UnorderedList>
                   {item.reviews.length > 0 ? <Text fontSize='md' as='i'>"{item.reviews[0].write_up}"</Text> : ''}
-                   <Stack direction='row' spacing='10px' justify={'stretch'}>
+                   <Stack direction='row' spacing='10px' justify={'center'}>
                     <Button leftIcon={<InfoOutlineIcon/>} onClick={() => history.push(`/workouts/${item.id}`)} colorScheme='teal' variant='solid'>
                       More Info
                     </Button>

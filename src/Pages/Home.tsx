@@ -10,6 +10,8 @@ function Home() {
   const workoutList = useContext(WorkoutContext);
   const history = useHistory();
 
+  let cow = workoutList.slice(0,3)
+
   return (
     <div >
       <header className="Home">
@@ -19,7 +21,7 @@ function Home() {
         
     <Box >
         <SimpleGrid minChildWidth='300px' spacing='10px'>
-        {workoutList.map((item: any) => 
+        {cow.map((item: any) => 
                 <Card >
                 <CardBody>
                   <Text fontSize='2xl'>{item.name}</Text>
@@ -37,7 +39,7 @@ function Home() {
                     </ListItem>)}
                   </UnorderedList>
                   {item.reviews.length > 0 ? <Text fontSize='md' as='i'>"{item.reviews[0].write_up}"</Text> : ''}
-                   <Stack direction='row' spacing='10px' justify={'stretch'}>
+                   <Stack direction='row' spacing='10px' justify={'center'}>
                     <Button leftIcon={<InfoOutlineIcon/>} onClick={() => history.push(`/workouts/${item.id}`)} colorScheme='teal' variant='solid'>
                       More Info
                     </Button>

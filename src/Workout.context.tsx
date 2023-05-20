@@ -34,7 +34,7 @@ type ContainerProps = {
 
 
 const WorkoutContextProvider = (props: ContainerProps) => {
-  // the value that will be given to the context
+
   const [workoutList, setWorkoutList] = useState([]);
 
 
@@ -50,11 +50,9 @@ const WorkoutContextProvider = (props: ContainerProps) => {
     });
   }, []);
 
-  // fetch a user from a fake backend API
   useEffect(() => {
     const fetchUser = () => {
-      // this would usually be your own backend, or localStorage
-      // for example
+
       fetch("/workouts")
         .then((response) => response.json())
         .then((result) => setWorkoutList(result))
@@ -64,7 +62,7 @@ const WorkoutContextProvider = (props: ContainerProps) => {
   }, []);
 
   return (
-    // the Provider gives access to the context to its children
+
     <WorkoutContext.Provider value={workoutList}>
       {props.children}
     </WorkoutContext.Provider>
