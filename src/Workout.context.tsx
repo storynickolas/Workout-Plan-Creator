@@ -1,28 +1,3 @@
-
-// type ContainerProps = {
-//   children: React.ReactNode; 
-// };
-
-// export const WorkoutContext = createContext(WorkoutContextData)
-
-// export const WorkoutProvider = (props: ContainerProps) => {
-//   const [newName, setNewName] = useState([])
-
-//     useEffect(() => {
-//       fetch("/workouts").then((response) => {
-//         if (response.ok) {
-//           response.json().then((user) => 
-//           {
-//             let arr = user.slice(0, 2)
-//             setNewName(arr)
-//           });
-//         }
-//       });
-//     }, []);
-
-//   return <WorkoutContext.Provider value={newName}>{props.children}</WorkoutContext.Provider>
-// }
-
 import React, { createContext, useState, useEffect } from "react";
 
 // create context
