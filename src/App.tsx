@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, createContext, useContext } from "react";
+// import { useState, createContext, useContext } from "react";
 import Workouts from './Pages/Workouts'
 import Exercises from './Pages/Exercises'
 import User from './Pages/User'
@@ -9,19 +9,63 @@ import { Route, Switch } from "react-router-dom";
 import Navbar from './Navbar';
 import NewProgram from './Pages/NewProgram';
 import Signup from './Pages/Signup';
+import { Box } from '@chakra-ui/react'
+import Workout from './Pages/Workout';
+import React, { useEffect, useState, useContext } from 'react';
 
-interface CurrentUserContextType {
-  user: string;
-}
-
-export const CurrentUserContext = createContext<CurrentUserContextType | null>(null);
-
+import { WorkoutContext, WorkoutContextProvider } from './Workout.context'
 
 function App() {
-  const [user, setUser] = useState("Tom");
+
+  const [workoutList, setWorkoutList] = useState()
+
+  
+
+//   interface Workout {
+//     name:              string;
+//     time:              number;
+//     id:                number;
+//     workout_exercises: WorkoutExercise[];
+//     reviews:           Review[];
+// }
+
+// interface Review {
+//     rating:   number;
+//     write_up: string;
+// }
+
+// interface WorkoutExercise {
+//     id:       number;
+//     exercise: Exercise;
+//     reps:     number;
+//     sets:     number;
+// }
+
+// interface Exercise {
+//     id:           number;
+//     name:         string;
+//     muscle_group: string;
+//     video:        string;
+//     created_at:   Date;
+//     updated_at:   Date;
+// }
+
+//   useEffect(() => {
+//     fetch("/workouts").then((response) => {
+//       if (response.ok) {
+//         response.json().then((user) => 
+//         {
+//           console.log(user)
+//           setWorkoutList(user)
+//         });
+//       }
+//     });
+//   }, []);
+
 
   return (
-    <CurrentUserContext.Provider value={{user: user}}>
+    // <UserProvider >
+    <WorkoutContextProvider>
     <div className="App">
       <header >
           <h1 color='white'>Workouts</h1>
@@ -29,10 +73,14 @@ function App() {
         </header>
       <Switch>
         <Route exact path="/">
+        
             <Home />
+           
           </Route>
         <Route exact path="/workouts">
+        <Box bg='grey' w='100%' h='100vh' p={4} color='white'>
           <Workouts />
+          </Box>
         </Route>
         <Route exact path="/newprogram">
           <NewProgram />
@@ -52,9 +100,12 @@ function App() {
           <Signup />
 
       </Route>
+      <Route exact path='/workouts/:id'>
+              <Workout  workoutList={workoutList}/>
+            </Route>
       </Switch>
     </div>
-              </CurrentUserContext.Provider>
+</WorkoutContextProvider>
   );
 }
 

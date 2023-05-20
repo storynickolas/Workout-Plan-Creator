@@ -44,7 +44,7 @@ function NewProgram() {
   )
 
   useEffect(() => {
-    fetch("http://localhost:3000/exercises").then((response) => {
+    fetch("/exercises").then((response) => {
       if (response.ok) {
         response.json().then((user) => 
         {

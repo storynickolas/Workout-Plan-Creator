@@ -11,6 +11,8 @@ function Exercises() {
     }]
   )
 
+  const [sgroup, setSgroup] = useState("")
+
   const [selected, setSelected] = useState(
     {
       name: "",
@@ -28,9 +30,10 @@ function Exercises() {
     })
   }
 
+  const groups = ["Back", "Biceps", "Triceps", "Shoulders", "Chest", "Legs", "Cardio"]
 
   useEffect(() => {
-    fetch("http://localhost:3000/exercises").then((response) => {
+    fetch("/exercises").then((response) => {
       if (response.ok) {
         response.json().then((user) => 
         {
@@ -50,11 +53,26 @@ function Exercises() {
           <iframe  src={selected.video} width="100%" title="YouTube video player" />
           </AspectRatio>
           <Text fontSize='2xl'>{selected.name}</Text>
+           
         </Box>
         </Center>
+        
       </SimpleGrid>
+
+
         <Text fontSize='4xl'>Exercises</Text>
+       
+        <SimpleGrid minChildWidth='75px' spacing='10px'>
+        {
+          groups.map((item) => 
+        <Button colorScheme='teal' variant='outline' onClick={() => setSgroup(item)} >
+          {item}
+        </Button>
+          )
+      }
+      </SimpleGrid>
         <SimpleGrid minChildWidth='200px' spacing='10px'>
+          
         {
           newName.map((item) => 
             <Card onClick={() => handleClick(item)} cursor='pointer'>

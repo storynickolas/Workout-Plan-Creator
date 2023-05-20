@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from 'react-router-dom';
 import {
   Flex,
@@ -23,10 +23,9 @@ import { useHistory } from 'react-router-dom'
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState("");
 
   const history = useHistory();
 
@@ -38,11 +37,16 @@ const Login = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ 'username': user, 'password': password }),
     }).then((r) => {
       if (r.ok) {
-        r.json().then((user) => setUser(user.username));
-        history.push(`/mypage`)
+        r.json().then((value) => {
+          // changeUser(user)
+          sessionStorage.setItem('user', value.username)
+          sessionStorage.setItem('user_id', value.id)
+        }).then(() => {
+          history.push(`/mypage`)
+        });
       } else {
         r.json().then((err) => setErrors(err.errors));
       }
@@ -80,7 +84,7 @@ const Login = () => {
             >  
               <FormControl>
                 <InputGroup>
-                  <Input placeholder="username" onChange={(e) => setUsername(e.target.value)} />
+                  <Input placeholder="username" onChange={(e) => setUser(e.target.value)} />
                 </InputGroup>
               </FormControl>
               <FormControl>
@@ -108,7 +112,6 @@ const Login = () => {
                 Login
               </Button>
               <Text>{errors}</Text>
-              <Text>{user}</Text>
             </Stack>
           </form>
           <Box>
