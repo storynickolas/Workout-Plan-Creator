@@ -47,7 +47,13 @@ const Login = () => {
       if (r.ok) {
         r.json().then((value) => {
           // changeUser(user)
-          // console.log(value)
+          console.log(value.saved_workouts)
+          let cow : any = []
+          value.saved_workouts.forEach((item: any) => {
+            if(cow.includes(item.workout_id) === false){cow.push(item.workout_id)}
+          })
+          console.log(cow)
+          sessionStorage.setItem('schedule_id', value.schedule.id)
           sessionStorage.setItem('user', value.username)
           sessionStorage.setItem('user_id', value.id)
           setUser(value.username)
