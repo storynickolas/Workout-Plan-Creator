@@ -12,11 +12,14 @@ import {
   InputRightElement,
   Text,
   FormControl,
+  useStatStyles,
 
 } from "@chakra-ui/react";
 
 import weights from '../Weights.jpg';
 import { useHistory } from 'react-router-dom'
+import { UserContext } from '../User.context';
+
 
 
 
@@ -25,7 +28,9 @@ const Login = () => {
 
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
-  const [user, setUser] = useState("");
+  const [username, setUsername] = useState("");
+
+  const {user, setUser} = useContext(UserContext)
 
   const history = useHistory();
 
@@ -37,15 +42,18 @@ const Login = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ 'username': user, 'password': password }),
+      body: JSON.stringify({ 'username': username, 'password': password }),
     }).then((r) => {
       if (r.ok) {
         r.json().then((value) => {
           // changeUser(user)
+          // console.log(value)
           sessionStorage.setItem('user', value.username)
           sessionStorage.setItem('user_id', value.id)
+          setUser(value.username)
         }).then(() => {
           history.push(`/mypage`)
+          // console.log(user)
         });
       } else {
         r.json().then((err) => setErrors(err.errors));
@@ -84,7 +92,7 @@ const Login = () => {
             >  
               <FormControl>
                 <InputGroup>
-                  <Input placeholder="username" onChange={(e) => setUser(e.target.value)} />
+                  <Input placeholder="username" onChange={(e) => setUsername(e.target.value)} />
                 </InputGroup>
               </FormControl>
               <FormControl>

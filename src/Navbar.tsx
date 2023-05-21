@@ -2,19 +2,20 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@chakra-ui/react'
 // import { CurrentUserContext } from './App'
+import { UserContext } from './User.context';
 
 
 
 
 function Navbar() {
-  const [user, setUser] = useState('')
+  const {user, setUser} = useContext(UserContext)
 
 
 
 
   useEffect(() => {
-      setUser(sessionStorage.getItem("user") || '')
-    }, []);
+      console.log(user)
+    }, [user, ]);
 
     
 
@@ -33,7 +34,7 @@ function Navbar() {
       <Button>
       <Link to={`/newProgram`}>Add A Workout</Link>
       </Button>
-      {user !== 'Tom'  ?
+      {user !== 'Tom' ?
       <Button>
       <Link to={`/myPage`} >My Page</Link>
       </Button>

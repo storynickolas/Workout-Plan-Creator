@@ -25,17 +25,6 @@ const WorkoutContextProvider = (props: ContainerProps) => {
     });
   }, []);
 
-  useEffect(() => {
-    const fetchUser = () => {
-
-      fetch("/workouts")
-        .then((response) => response.json())
-        .then((result) => setWorkoutList(result))
-    };
-
-    fetchUser();
-  }, []);
-
   return (
 
     <WorkoutContext.Provider value={workoutList}>
