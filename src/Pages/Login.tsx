@@ -35,6 +35,7 @@ const Login = () => {
   const history = useHistory();
 
   function handleSubmit(e: React.SyntheticEvent) {
+
     e.preventDefault();
     console.log('Test')
     fetch("/login", {
@@ -46,17 +47,10 @@ const Login = () => {
     }).then((r) => {
       if (r.ok) {
         r.json().then((value) => {
-          // changeUser(user)
-          console.log(value.saved_workouts)
-          let cow : any = []
-          value.saved_workouts.forEach((item: any) => {
-            if(cow.includes(item.workout_id) === false){cow.push(item.workout_id)}
-          })
-          console.log(cow)
-          sessionStorage.setItem('schedule_id', value.schedule.id)
-          sessionStorage.setItem('user', value.username)
+          console.log(user)
+          setUser({id: value.id, schedule: {id: value.schedule.id}, saved_workouts: value.saved_workouts})
           sessionStorage.setItem('user_id', value.id)
-          setUser(value.username)
+
         }).then(() => {
           history.push(`/mypage`)
           // console.log(user)

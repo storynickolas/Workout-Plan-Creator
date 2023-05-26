@@ -5,12 +5,12 @@ type ContainerProps = {
 };
 
 type UserContextType = {
-  user: string | null,
-  setUser: React.Dispatch<React.SetStateAction<string | null>>
+  user: {id: number, schedule: {id: number}, saved_workouts: { id: number, name: string }[]},
+  setUser: React.Dispatch<React.SetStateAction<{id: number, schedule: {id: number}, saved_workouts: { id: number, name: string }[]}>>
 }
 
 const iUserContextState = {
- user: null,
+ user: {id: 0, schedule: {id: 0}, saved_workouts: [{id: 0, name: "test"}]},
  setUser: () => {}
 }
 
@@ -19,13 +19,25 @@ const UserContext = createContext<UserContextType>(iUserContextState)
 
 const UserContextProvider = (props: ContainerProps) => {
 
-  const [user, setUser] = useState<string | null>(null)
+  const [user, setUser] = useState<{id: number, schedule: {id: number}, saved_workouts: { id: number, name: string }[]}>({id: 0, schedule: {id: 0}, saved_workouts: [{ id: 0, name: "test" }]})
+
+  let cow = sessionStorage.getItem('user_id')
 
   useEffect(() => {
+    console.log(user)
+    fetch(`/users/${sessionStorage.getItem('user_id')}`).then((response) => {
+      if (response.ok) {
+        response.json().then((user) => 
+        {
+          console.log(user)
+          console.log("Testing Stuff")
+          setUser(user[0])
+        });
+      }
+    });
+  }, [cow]);
 
-    setUser(sessionStorage.getItem('user'))
 
-  }, [user])
 
   return (
 

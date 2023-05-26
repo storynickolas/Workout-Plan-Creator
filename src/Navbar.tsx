@@ -34,7 +34,7 @@ function Navbar() {
       <Button>
       <Link to={`/newProgram`}>Add A Workout</Link>
       </Button>
-      {user !== 'Tom' ?
+      {user.id !== 0 ?
       <Button>
       <Link to={`/myPage`} >My Page</Link>
       </Button>
