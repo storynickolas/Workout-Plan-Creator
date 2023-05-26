@@ -40,7 +40,7 @@ function Workouts( ) {
   }
 
   return (
-    <Box >
+    <Box bg='tomato' h='100%' minH='100vh' w='100%'>
       <Text fontSize='4xl'>Featured Workouts</Text>
         <SimpleGrid minChildWidth='300px' spacing='10px'>
         {

@@ -80,9 +80,9 @@ function App() {
            
           </Route>
         <Route exact path="/workouts">
-        <Box bg='grey' w='100%' h='100vh' p={4} color='white'>
+
           <Workouts />
-          </Box>
+
         </Route>
         <Route exact path="/newprogram">
           <NewProgram />

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Button, CardBody, Text, SimpleGrid, AspectRatio, Box, Center } from '@chakra-ui/react'
+import { Card, Button, CardBody, Text, SimpleGrid, AspectRatio, Box, Center, Input, Flex } from '@chakra-ui/react'
 import AddExercise from './ExerciseAdd';
 
 function Exercises() {
+  const [search, setSearch] = useState('')
   const [newName, setNewName] = useState(
     [{
       name: "",
@@ -19,12 +20,20 @@ function Exercises() {
     }]
   )
 
-  const [sgroup, setSgroup] = useState("")
+  const [searched, setSearched] = useState(
+    [{
+      name: "",
+      video: "",
+      muscle_group: ''
+    }]
+  )
+
+  const [sgroup, setSgroup] = useState("All")
 
   const [selected, setSelected] = useState(
     {
       name: "",
-      video: 'https://www.youtube.com/embed/KDEl3AmZbVE',
+      video: '',
       muscle_group: ''
     }
   )
@@ -44,12 +53,22 @@ function Exercises() {
     })
   }
 
-  const groups = ["Back", "Biceps", "Triceps", "Shoulders", "Chest", "Legs", "Cardio"]
+  const groups = ["All", "Back", "Biceps", "Triceps", "Shoulders", "Chest", "Legs", "Abs"]
 
   function sortGroup(item: string) {
+    if(item === 'All'){
+      setSgroup(item)
+      setSearched([...newName])
+    setSorted([...newName])
+    }
+    else{
+      setSgroup(item)
     let newList = [...newName]
     newList = newList.filter(function(listItem) {return listItem.muscle_group === item})
+    setSearched([...newList])
     setSorted([...newList])
+    }
+    
   }
 
   useEffect(() => {
@@ -60,50 +79,69 @@ function Exercises() {
           console.log(user)
           setNewName(user)
           setSorted(user)
+          setSearched(user)
           // handleClick(user[0])
         })
       }
     });
   }, []);
 
+
+  useEffect(() => {
+    console.log(sgroup)
+    if(sgroup === 'All'){
+      let newList = [...newName]
+      newList = newList.filter(function(item) { return item.name.toUpperCase().includes(search.toUpperCase()) === true})
+ 
+    setSearched(newList)
+    }
+    else{
+      let newList = [...sorted]
+      newList = newList.filter(function(item) { return item.name.toUpperCase().includes(search.toUpperCase()) === true})
+ 
+    setSearched(newList)
+    }
+  }, [search]);
+
   return (
     <Box bg='grey' w='100%' h='100%' minH='100vh' p={4} color='white'>
+        <Text fontSize='4xl'>Exercises</Text>
       <SimpleGrid columns={1} >
         <Center >
         <Box bg='tomato' width='600px' onClick={() => console.log(selected)}>
+          {selected.video === '' ? <Box minH={'30vh'}><Text>Select an Exercise</Text></Box> : <Box>
           <AspectRatio maxW='1000px' ratio={5 / 3}>
           <iframe  src={selected.video} width="100%" title="YouTube video player" />
           </AspectRatio>
-          <Text fontSize='2xl'>{selected.name}</Text>
+          <Text fontSize='2xl'>{selected.name}</Text></Box>
+          }
            
         </Box>
         </Center>
-        <Button colorScheme='teal' variant='outline' onClick={() => console.log(sorted)} >
-          Test
-        </Button>
+
+        <Input placeholder='Search...' bgColor={'white'} color='teal' onChange={(e) => setSearch(e.target.value)}/>
         
       </SimpleGrid>
-
-
-        <Text fontSize='4xl'>Exercises</Text>
-       
         <SimpleGrid minChildWidth='75px' spacing='10px'>
         {
           groups.map((item) => 
-        <Button colorScheme='teal' variant='outline' onClick={() => sortGroup(item)} >
+        <Button colorScheme='teal'  onClick={() => sortGroup(item)} isActive={item === sgroup} >
           {item}
         </Button>
           )
       }
       </SimpleGrid>
         <SimpleGrid minChildWidth='200px' spacing='10px'>
-          
         {
-          sorted.map((item) => 
-            <Card onClick={() => handleClick(item)} cursor='pointer'>
-              <CardBody> 
+          searched.map((item) => 
+            <Card onClick={() => handleClick(item)} cursor='pointer' alignContent={'center'} justifyContent={'center'}>
+              
+              <Flex>
+              <CardBody > 
+                
                 <Text fontSize='2xl'>{item.name}</Text>
               </CardBody>
+              </Flex>
             </Card>
        )}
        </SimpleGrid>

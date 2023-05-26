@@ -80,7 +80,10 @@ function User() {
   }, [user]);
 
   return (
+    
     <Box bg='grey' w='100%' h='100vh' p={4} color='white'>
+      {Number(sessionStorage.getItem('user_id')) !== 0 ?
+      <Box>
 
         <Button onClick={() => handleLogoutClick()}>Log Out</Button>
         <Button onClick={() => getInfo()}>Test</Button>
@@ -134,10 +137,9 @@ function User() {
                  
                 </Card> 
        ) : '' }
-
-
-
-      </Box>
+       </Box>
+       : <Text>Please Log In</Text> } 
+     </Box>
   );
 }
 

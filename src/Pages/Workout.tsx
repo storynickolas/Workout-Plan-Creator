@@ -27,7 +27,7 @@ function Workout( ) {
   let cow: any = workoutList[vw]
 
   return (
-    <Box bg='grey' w='100%' h='100vh' p={4} color='white'>
+    <Box bg='grey' w='100%' h='100%' minH='100vh' p={4} color='white'>
       <Button onClick={() => console.log(cow)}>Test</Button>
       <Card>
       <SimpleGrid columns={1} >
