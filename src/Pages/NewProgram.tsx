@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Input, Card, CardBody, Text, Switch, Box, Center, HStack, Flex, Table, Thead, Tr, Td, Th, Tbody, Heading, Select, Grid, GridItem} from '@chakra-ui/react'
 import AddButton from '../AddButton';
 
@@ -8,65 +8,62 @@ import { ExerciseContext } from '../Exercise.context';
 
 function NewProgram() {
 
-  const {exercises, setSearch, groups, sgroup, setSgroup, searched, allExercises, selected, setSelected} = useContext(ExerciseContext);
+  const {setSearch, groups, setSgroup, searched, allExercises, selected, setSelected} = useContext(ExerciseContext);
+
+  /////////////////////////////////
+
+  const [clicked, setClicked] = useState(false)
+  const [newW, setNewW] = useState({name: '', time: 0})
+
+  function handleNew(myData: {name: string, time: number}) {
+    setNewW(myData)
+    setClicked(true)
+  }
+
+  //////////////////////////////////
 
   const [moving, setMoving] = useState('')
   const [list, setList] = useState< string[]>([''])
-
-
-
-  const [newW, setNewW] = useState({name: '', time: 0})
-
-  const [clicked, setClicked] = useState(false)
-
 
   function handleOver(e: React.ChangeEvent<any>) {
     e.preventDefault()
   }
 
   function dropIt(e: React.ChangeEvent<any>) {
+    //Add Exercise to Workout
     e.preventDefault()
-    let donkey = [...list]
-    if(donkey[0] === ''){
-      donkey[0] = moving
+    let newList = [...list]
+    if(newList[0] === ''){
+      newList[0] = moving
     }
     else{
-      donkey.push(moving)
+      newList.push(moving)
     }
-    
-    setList(donkey)
+    setList([...newList])
 
-
-    const pos = searched.map(e => e.name).indexOf(moving)
-    console.log(pos)
-    let giraffe = [...selected]
-    giraffe[pos] = moving
-    setSelected([...giraffe])
+    //Make Exercise No Longer Draggable
+    const pos = allExercises.map(e => e.name).indexOf(moving)
+    let currentExercises = [...selected]
+    currentExercises[pos] = false
+    setSelected([...currentExercises])
   }
 
 
   function moreStuff(item: string) {
-    console.log(list)
-    let snail = [...list]
-    let fish = snail.filter(word => word !== item)
-     setList(fish)
+    //Remove Exercise from Workout
+    let newList = [...list]
+    newList = newList.filter(word => word !== item)
+    setList(newList)
 
-    const pos = searched.map(e => e.name).indexOf(item)
-    let giraffe = [...selected]
-    giraffe[pos] = false
-    setSelected(giraffe)
+    //Make Exercise Draggable Again
+    const pos = allExercises.map(e => e.name).indexOf(item)
+    let currentExercises = [...selected]
+    currentExercises[pos] = true
+    setSelected(currentExercises)
   }
-
-  function handleNew(myData: {name: string, time: number}) {
-    console.log(myData)
-    setNewW(myData)
-    setClicked(true)
-  }
-
 
   return (
     <Box bg='grey' w='100%' h='100%' minH={'100vh'} p={4} color='white'>
-      
       <Grid
         h='200px'
         templateRows='repeat(2, 1fr)'
@@ -74,8 +71,6 @@ function NewProgram() {
         gap={4}
       >
         <GridItem rowSpan={2} colSpan={1} bg='tomato' minH='80vh'>
-
-
           <Box padding={4}>
             <Heading>Exercises</Heading>
             <Input placeholder='Search...' bgColor={'white'} color='teal' onChange={(e) => setSearch(e.target.value)}/>
@@ -109,8 +104,6 @@ function NewProgram() {
               </Table>
             </Box>
           </Box>
-
-          
         </GridItem>
         <GridItem rowSpan={2} colSpan={4} bg='tomato' >
           {clicked ? <Text fontSize='6xl'>{newW.name}</Text> : ''}
@@ -118,54 +111,51 @@ function NewProgram() {
   {
       list[0] === '' ? '' : list.map((item) => 
         <Card maxH='200px' >
-
         <CardBody >
           <Center >
-           <HStack spacing={8}>
-          <Text fontSize='xl'>{item}</Text>
-
-            <Text fontSize='sm'>Reps</Text>
-            <Input defaultValue={12} width={'50px'}></Input>
-            <Text fontSize='sm'>Sets</Text>
-            <Input defaultValue={4} width={'50px'}></Input>
-
-          <Text fontSize='md'>Confirm:   <Switch size='lg' /></Text>
-          <Button onClick={() => moreStuff(item)}>Remove</Button>
-              </HStack>
-              </Center>
-          </CardBody>
-
+            <HStack spacing={8}>
+              <Text fontSize='xl'>{item}</Text>
+              <Text fontSize='sm'>Reps</Text>
+              <Input defaultValue={12} width={'50px'}></Input>
+              <Text fontSize='sm'>Sets</Text>
+              <Input defaultValue={4} width={'50px'}></Input>
+              <Text fontSize='md'>Confirm:   <Switch size='lg' /></Text>
+              <Button onClick={() => moreStuff(item)}>Remove</Button>
+            </HStack>
+          </Center>
+        </CardBody>
         </Card>
       )}
       
+      {clicked ?
+        <Card minWidth='90%'>
+          <div className='Drop' onDragOver={handleOver} onDrop={dropIt} >
+            Add an Exercise
+          </div>
+        </Card> : ''}
 
+      {newW.name === '' ?    <Flex
+        flexDirection="column"
+        width="100wh"
+        height="80vh"
+        bgColor='tomato'
 
-      {clicked ? <Card minWidth='90%'><div className='Drop' onDragOver={handleOver} onDrop={dropIt} >Add an Exercise</div></Card> : ''}
-
-
-{  newW.name === '' ?    <Flex
-      flexDirection="column"
-      width="100wh"
-      height="80vh"
-      bgColor='tomato'
-
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Box minW='30vw' 
-        p="1rem"
-        backgroundColor="white"
-      >
-<Text color='teal' fontSize='3xl'>Click Below to Create A Workout</Text>
-{clicked ? '': <AddButton handleNew={handleNew}/>}
-              </Box>
-        </Flex>
-
-: ''
-}
-  </GridItem>
-</Grid>
-</Box>
+        justifyContent="center"
+        alignItems="center"
+        >
+        <Box minW='30vw' 
+          p="1rem"
+          backgroundColor="white"
+        >
+      <Text color='teal' fontSize='3xl'>Click Below to Create A Workout</Text>
+      {clicked ? '': 
+      <AddButton handleNew={handleNew}/>}
+        </Box>
+          </Flex> : ''
+      }
+      </GridItem>
+    </Grid>
+  </Box>
   );
 }
 
