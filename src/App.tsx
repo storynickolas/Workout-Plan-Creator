@@ -15,6 +15,7 @@ import React, { useEffect, useState, useContext } from 'react';
 
 import { WorkoutContext, WorkoutContextProvider } from './Workout.context'
 import { UserContext, UserContextProvider } from './User.context'
+import { ExerciseContext, ExerciseContextProvider } from './Exercise.context'
 
 function App() {
 
@@ -67,6 +68,7 @@ function App() {
   return (
     <UserContextProvider >
     <WorkoutContextProvider>
+    <ExerciseContextProvider>
 
     <div className="App">
       <header >
@@ -107,6 +109,7 @@ function App() {
             </Route>
       </Switch>
     </div>
+</ExerciseContextProvider>
 </WorkoutContextProvider>
 </UserContextProvider>
   );

@@ -1,34 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Card, Button, CardBody, Text, SimpleGrid, AspectRatio, Box, Center, Input, Flex } from '@chakra-ui/react'
-import AddExercise from './ExerciseAdd';
+
+import { ExerciseContext } from '../Exercise.context';
+
 
 function Exercises() {
-  const [search, setSearch] = useState('')
-  const [newName, setNewName] = useState(
-    [{
-      name: "",
-      video: "",
-      muscle_group: ''
-    }]
-  )
+  // const [search, setSearch] = useState('')
 
-  const [sorted, setSorted] = useState(
-    [{
-      name: "",
-      video: "",
-      muscle_group: ''
-    }]
-  )
-
-  const [searched, setSearched] = useState(
-    [{
-      name: "",
-      video: "",
-      muscle_group: ''
-    }]
-  )
-
-  const [sgroup, setSgroup] = useState("All")
+  const {exercises, setSearch, groups, sgroup, setSgroup, searched} = useContext(ExerciseContext);
 
   const [selected, setSelected] = useState(
     {
@@ -39,73 +18,21 @@ function Exercises() {
   )
 
   function handleClick(item: {name: string,
-  video: string,
-  muscle_group: string}) {
-    console.log({
-      name: item.name,
-      video: item.video,
-      muscle_group: item.muscle_group
-    })
-    setSelected({
-      name: item.name,
-      video: item.video,
-      muscle_group: item.muscle_group
-    })
-  }
-
-  const groups = ["All", "Back", "Biceps", "Triceps", "Shoulders", "Chest", "Legs", "Abs"]
-
-  function sortGroup(item: string) {
-    if(item === 'All'){
-      setSgroup(item)
-      setSearched([...newName])
-    setSorted([...newName])
+    video: string,
+    muscle_group: string}) {
+      setSelected({
+        name: item.name,
+        video: item.video,
+        muscle_group: item.muscle_group
+      })
     }
-    else{
-      setSgroup(item)
-    let newList = [...newName]
-    newList = newList.filter(function(listItem) {return listItem.muscle_group === item})
-    setSearched([...newList])
-    setSorted([...newList])
-    }
-    
-  }
 
-  useEffect(() => {
-    fetch("/exercises").then((response) => {
-      if (response.ok) {
-        response.json().then((user) => 
-        {
-          console.log(user)
-          setNewName(user)
-          setSorted(user)
-          setSearched(user)
-          // handleClick(user[0])
-        })
-      }
-    });
-  }, []);
-
-
-  useEffect(() => {
-    console.log(sgroup)
-    if(sgroup === 'All'){
-      let newList = [...newName]
-      newList = newList.filter(function(item) { return item.name.toUpperCase().includes(search.toUpperCase()) === true})
- 
-    setSearched(newList)
-    }
-    else{
-      let newList = [...sorted]
-      newList = newList.filter(function(item) { return item.name.toUpperCase().includes(search.toUpperCase()) === true})
- 
-    setSearched(newList)
-    }
-  }, [search]);
+  //////////////////////////////////////
 
   return (
     <Box bg='grey' w='100%' h='100%' minH='100vh' p={4} color='white'>
         <Text fontSize='4xl'>Exercises</Text>
+        <Button onClick={() => console.log(exercises)}></Button>
       <SimpleGrid columns={1} >
         <Center >
         <Box bg='tomato' width='600px' onClick={() => console.log(selected)}>
@@ -125,7 +52,7 @@ function Exercises() {
         <SimpleGrid minChildWidth='75px' spacing='10px'>
         {
           groups.map((item) => 
-        <Button colorScheme='teal'  onClick={() => sortGroup(item)} isActive={item === sgroup} >
+        <Button colorScheme='teal'  onClick={() => setSgroup(item)} isActive={item === sgroup} >
           {item}
         </Button>
           )
@@ -145,7 +72,7 @@ function Exercises() {
             </Card>
        )}
        </SimpleGrid>
-       <AddExercise />
+
     </Box>
   );
 }

@@ -1,8 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FormControl, Button, FormLabel, Input, Modal, ModalOverlay, ModalContent, ModalBody, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure} from '@chakra-ui/react'
 
-function AddButton() {
+function AddButton({ handleNew } : {handleNew : (response: {name: string, time: number}) => void}) {
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const [workout, setWorkout] = useState('')
+  const [time, setTime] = useState('')
+
+  function handleSave() {
+    let cow = {
+      name: workout,
+      time: Number(time)
+    }
+    console.log(cow)
+    fetch(`/workouts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: JSON.stringify(cow),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if(response.errors){
+          // setStatus(response.errors)
+          console.log(response.errors)
+        }
+        else {
+          // setStatus(['Successfully Added'])
+          // dispatch(addBeer(response));
+          handleNew(response)
+
+        }
+      })
+    onClose()
+
+  }
+
 
   return (
     <>
@@ -20,17 +55,17 @@ function AddButton() {
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel>Workout Name</FormLabel>
-              <Input placeholder='Back and ...' />
+              <Input placeholder='Back and ...' onChange={(e) => setWorkout(e.target.value)}/>
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>Length of Workout (Minutes)</FormLabel>
-              <Input placeholder='60' />
+              <Input placeholder='60' onChange={(e) => setTime(e.target.value)}/>
             </FormControl>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3}>
+            <Button colorScheme='blue' mr={3} onClick={handleSave}>
               Save
             </Button>
             <Button onClick={onClose}>Cancel</Button>

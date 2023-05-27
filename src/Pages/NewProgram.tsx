@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { FormControl, Button, FormLabel, Input, SimpleGrid, Card, CardBody, Text, Switch, Box, Center, HStack, VStack, StackDivider, Flex, Table, Thead, Tr, Td, Th, Tbody, Heading, Select, Grid, GridItem} from '@chakra-ui/react'
-// import AddButton from '../AddButton';
-import { Modal, ModalOverlay, ModalContent, ModalBody, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure} from '@chakra-ui/react'
+import React, { useEffect, useState, useContext } from 'react';
+import { Button, Input, Card, CardBody, Text, Switch, Box, Center, HStack, Flex, Table, Thead, Tr, Td, Th, Tbody, Heading, Select, Grid, GridItem} from '@chakra-ui/react'
+import AddButton from '../AddButton';
+
+import { ExerciseContext } from '../Exercise.context';
+
 
 
 function NewProgram() {
+
+  const {exercises, setSearch, groups, sgroup, setSgroup, searched, allExercises, selected, setSelected} = useContext(ExerciseContext);
+
   const [moving, setMoving] = useState('')
-  const [list, setList] = useState< string[] | [] >([])
-  const [selected, setSelected] = useState< (string | boolean)[] | [] >([])
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [list, setList] = useState< string[]>([''])
 
-  const [search, setSearch] = useState('')
 
-  const [workout, setWorkout] = useState('')
-  const [time, setTime] = useState('')
+
   const [newW, setNewW] = useState({name: '', time: 0})
 
   const [clicked, setClicked] = useState(false)
-
-  const groups = ["All", "Back", "Biceps", "Triceps", "Shoulders", "Chest", "Legs", "Abs"]
 
 
   function handleOver(e: React.ChangeEvent<any>) {
@@ -28,57 +27,23 @@ function NewProgram() {
   function dropIt(e: React.ChangeEvent<any>) {
     e.preventDefault()
     let donkey = [...list]
-    donkey.push(moving)
+    if(donkey[0] === ''){
+      donkey[0] = moving
+    }
+    else{
+      donkey.push(moving)
+    }
+    
     setList(donkey)
 
 
-    const pos = newName.map(e => e.name).indexOf(moving)
+    const pos = searched.map(e => e.name).indexOf(moving)
     console.log(pos)
     let giraffe = [...selected]
     giraffe[pos] = moving
     setSelected([...giraffe])
   }
 
-  const [newName, setNewName] = useState(
-    [{
-      name: "",
-      video: "",
-      muscle_group: ''
-    }]
-  )
-
-  const [sorted, setSorted] = useState(
-    [{
-      name: "",
-      video: "",
-      muscle_group: ''
-    }]
-  )
-
-  const [searched, setSearched] = useState(
-    [{
-      name: "",
-      video: "",
-      muscle_group: ''
-    }]
-  )
-
-  useEffect(() => {
-    fetch("/exercises").then((response) => {
-      if (response.ok) {
-        response.json().then((user) => 
-        {
-          setNewName(user)
-          setSearched(user)
-          setSorted(user)
-        }).then(() => {
-          const res = [...Array(newName.length)].map(() => true)
-          setSelected(res)
-        }
-        );
-      }
-    });
-  }, [newName.length]);
 
   function moreStuff(item: string) {
     console.log(list)
@@ -86,116 +51,22 @@ function NewProgram() {
     let fish = snail.filter(word => word !== item)
      setList(fish)
 
-    const pos = newName.map(e => e.name).indexOf(item)
+    const pos = searched.map(e => e.name).indexOf(item)
     let giraffe = [...selected]
-    giraffe[pos] = true
+    giraffe[pos] = false
     setSelected(giraffe)
   }
 
-  function handleSave() {
-    let cow = {
-      name: workout,
-      time: Number(time)
-    }
-    console.log(cow)
-    fetch(`/workouts`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      },
-      body: JSON.stringify(cow),
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if(response.errors){
-          // setStatus(response.errors)
-          console.log(response.errors)
-        }
-        else {
-          // setStatus(['Successfully Added'])
-          // dispatch(addBeer(response));
-          setNewW(response)
-
-        }
-      })
+  function handleNew(myData: {name: string, time: number}) {
+    console.log(myData)
+    setNewW(myData)
     setClicked(true)
-    onClose()
-
   }
-
-  ////////////////////////////////////////////
-
- 
-
-  const [sgroup, setSgroup] = useState("All")
-
-  function sortGroup(item: string) {
-    if(item === 'All'){
-      setSgroup(item)
-      setSearched([...newName])
-    setSorted([...newName])
-    }
-    else{
-      setSgroup(item)
-    let newList = [...newName]
-    newList = newList.filter(function(listItem) {return listItem.muscle_group === item})
-    setSearched([...newList])
-    setSorted([...newList])
-    }
-    
-  }
-
-  useEffect(() => {
-    console.log(sgroup)
-    if(sgroup === 'All'){
-      let newList = [...newName]
-      newList = newList.filter(function(item) { return item.name.toUpperCase().includes(search.toUpperCase()) === true})
- 
-    setSearched(newList)
-    }
-    else{
-      let newList = [...sorted]
-      newList = newList.filter(function(item) { return item.name.toUpperCase().includes(search.toUpperCase()) === true})
- 
-    setSearched(newList)
-    }
-  }, [search]);
 
 
   return (
     <Box bg='grey' w='100%' h='100%' minH={'100vh'} p={4} color='white'>
-     
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Add your Workout</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <FormControl>
-              <FormLabel>Workout Name</FormLabel>
-              <Input placeholder='Back and ...' onChange={(e) => setWorkout(e.target.value)}/>
-            </FormControl>
-
-            <FormControl mt={4}>
-              <FormLabel>Length of Workout (Minutes)</FormLabel>
-              <Input placeholder='60' onChange={(e) => setTime(e.target.value)}/>
-            </FormControl>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={handleSave}>
-              Save
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
-
+      
       <Grid
         h='200px'
         templateRows='repeat(2, 1fr)'
@@ -203,43 +74,49 @@ function NewProgram() {
         gap={4}
       >
         <GridItem rowSpan={2} colSpan={1} bg='tomato' minH='80vh'>
+
+
           <Box padding={4}>
             <Heading>Exercises</Heading>
             <Input placeholder='Search...' bgColor={'white'} color='teal' onChange={(e) => setSearch(e.target.value)}/>
             <Box overflowY="auto" maxHeight="60vh">
               <Table variant="simple" colorScheme="teal">
                 <Thead position="sticky" top={0} bgColor="grey">
-                  <Select onChange={(e) =>  sortGroup(e.target.value)}>
+                  <Select onChange={(e) =>  setSgroup(e.target.value)}>
                     {
-                      groups.map((item) => 
+                      groups.map((item: string) => 
                         <option value={item} >{item}</option>
                       )
                     }
                   </Select>
                 </Thead>
                 <Tbody >
-                {
-                searched.map((item, index) => 
+                { 
+                allExercises.map((item: {name: string}, index) => 
+                searched.map(e => e.name).indexOf(item.name) !== -1 ? 
                   <Tr backgroundColor={selected[index] === true ? 'teal' : 'grey'} >
                     <Td>
                       <Text 
                         fontSize='2xl'  
                         draggable={selected[index] === true ? true : false} 
-                        onDrag={() => setMoving(newName[index].name)}>{item.name}
+                        onDrag={() => setMoving(searched[index].name)}
+                        >{item.name}
                       </Text>
                     </Td>
-                  </Tr>
+                  </Tr> : ''
                 )}
                 </Tbody>
               </Table>
             </Box>
           </Box>
+
+          
         </GridItem>
         <GridItem rowSpan={2} colSpan={4} bg='tomato' >
           {clicked ? <Text fontSize='6xl'>{newW.name}</Text> : ''}
           {clicked ? <Text fontSize='4xl'>{newW.time} minutes</Text> : ''}
   {
-      list.map((item) => 
+      list[0] === '' ? '' : list.map((item) => 
         <Card maxH='200px' >
 
         <CardBody >
@@ -266,7 +143,7 @@ function NewProgram() {
       {clicked ? <Card minWidth='90%'><div className='Drop' onDragOver={handleOver} onDrop={dropIt} >Add an Exercise</div></Card> : ''}
 
 
-{  workout === '' ?    <Flex
+{  newW.name === '' ?    <Flex
       flexDirection="column"
       width="100wh"
       height="80vh"
@@ -280,7 +157,7 @@ function NewProgram() {
         backgroundColor="white"
       >
 <Text color='teal' fontSize='3xl'>Click Below to Create A Workout</Text>
-{clicked ? '': <Button onClick={onOpen}>Add a Workout</Button>}
+{clicked ? '': <AddButton handleNew={handleNew}/>}
               </Box>
         </Flex>
 
