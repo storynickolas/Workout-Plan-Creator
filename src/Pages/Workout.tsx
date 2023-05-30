@@ -8,12 +8,12 @@ import { useContext } from 'react';
 
 
 function Workout( ) {
-  const workoutList = useContext(WorkoutContext);
+  const {workoutList, setWorkoutList} = useContext(WorkoutContext);
   const [video, setVideo] = useState('')
   const [name, setName] = useState('')
   const [loading, setLoading] = useState(true)
   const history = useHistory();
-  type QuizParams = {
+  type itemIdParams = {
     id: string;
   };
 
@@ -28,6 +28,12 @@ function Workout( ) {
     fetch(`/workouts/${cow.id}`, { method: "DELETE" }).then((r) => {
       if(r.ok){
         console.log('Success')
+        history.push(`/workouts`)
+        /// Remove from state
+        let donkey = [...workoutList]
+        donkey.splice(pos)
+        let dragon = [...donkey]
+        setWorkoutList(dragon)
       }
       else {
         r.json().then((err) => console.log(err.errors));
@@ -36,7 +42,7 @@ function Workout( ) {
 
   }
   
-  const { id } = useParams<QuizParams>();
+  const { id } = useParams<itemIdParams>();
   let vw = Number(id)
   let pos = workoutList.map(e => e.id).indexOf(vw)
   
@@ -48,7 +54,7 @@ function Workout( ) {
 
     setTimeout(() => {
       setLoading(false)
-    }, 2000)
+    }, 3000)
 
   }, [cow])
 
@@ -76,7 +82,10 @@ function Workout( ) {
                  </Center> 
                  {cow.reviews.length > 0 ? <Text fontSize='md' as='i'>"{cow.reviews[0].write_up}"</Text> : ''}
   {/* </Center> */}
-                  </SimpleGrid> : <Text>Not Available</Text>}
+                  </SimpleGrid> : '' }
+                  
+                  {loading === false && cow === undefined ?
+                  <Text>Not Available</Text> : ''}
 
 
                   {cow ?

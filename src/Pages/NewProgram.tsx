@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Button, Input, Card, CardBody, Text, Switch, Box, Center, HStack, Flex, Table, Thead, Tr, Td, Th, Tbody, Heading, Select, Grid, GridItem} from '@chakra-ui/react'
+import { Button, Input, Card, Text, Switch, Box, Center, Flex, Table, Thead, Tr, Td, Tbody, Heading, Select, Grid, GridItem} from '@chakra-ui/react'
 import AddButton from '../AddButton';
 
 import { ExerciseContext } from '../Exercise.context';
