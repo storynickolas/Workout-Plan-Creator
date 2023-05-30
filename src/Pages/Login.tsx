@@ -48,7 +48,14 @@ const Login = () => {
       if (r.ok) {
         r.json().then((value) => {
           console.log(user)
-          setUser({id: value.id, schedule: {id: value.schedule.id}, saved_workouts: value.saved_workouts})
+          console.log(value)
+          if(value.schedule !== null) {
+            setUser({id: value.id, schedule: {id: value.schedule.id}, saved_workouts: value.saved_workouts})
+          }
+          else{
+            setUser({id: value.id, schedule: {id: 0}, saved_workouts: value.saved_workouts})
+          }
+          
           sessionStorage.setItem('user_id', value.id)
 
         }).then(() => {

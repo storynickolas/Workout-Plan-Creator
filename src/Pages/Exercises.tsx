@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Card, Button, CardBody, Text, SimpleGrid, AspectRatio, Box, Center, Input, Flex } from '@chakra-ui/react'
+import { Card, Button, CardBody, Text, SimpleGrid, AspectRatio, Box, Center, Input, Flex, Grid } from '@chakra-ui/react'
 
 import { ExerciseContext } from '../Exercise.context';
 
@@ -7,7 +7,7 @@ import { ExerciseContext } from '../Exercise.context';
 function Exercises() {
   // const [search, setSearch] = useState('')
 
-  const {exercises, setSearch, groups, sgroup, setSgroup, searched} = useContext(ExerciseContext);
+  const {exercises, setSearch, groups, sgroup, setSgroup, searched, search} = useContext(ExerciseContext);
 
   const [selected, setSelected] = useState(
     {
@@ -32,7 +32,7 @@ function Exercises() {
   return (
     <Box bg='grey' w='100%' h='100%' minH='100vh' p={4} color='white'>
         <Text fontSize='4xl'>Exercises</Text>
-        <Button onClick={() => console.log(exercises)}></Button>
+
       <SimpleGrid columns={1} >
         <Center >
         <Box bg='tomato' width='600px' onClick={() => console.log(selected)}>
@@ -46,10 +46,10 @@ function Exercises() {
         </Box>
         </Center>
 
-        <Input placeholder='Search...' bgColor={'white'} color='teal' onChange={(e) => setSearch(e.target.value)}/>
+        <Input placeholder='Search...' bgColor={'white'} color='teal' onChange={(e) => setSearch(e.target.value)} defaultValue={search}/>
         
       </SimpleGrid>
-        <SimpleGrid minChildWidth='75px' spacing='10px'>
+        <SimpleGrid minChildWidth='75px' spacing='10px' >
         {
           groups.map((item) => 
         <Button colorScheme='teal'  onClick={() => setSgroup(item)} isActive={item === sgroup} >
@@ -58,7 +58,11 @@ function Exercises() {
           )
       }
       </SimpleGrid>
-        <SimpleGrid minChildWidth='200px' spacing='10px'>
+        <SimpleGrid
+        background='teal'
+         maxH='40vh' gridAutoColumns='minmax(200px, auto)' autoFlow='column' overflowX={'auto'} padding={10} gap={6}>
+
+         
         {
           searched.map((item) => 
             <Card onClick={() => handleClick(item)} cursor='pointer' alignContent={'center'} justifyContent={'center'}>
@@ -71,6 +75,7 @@ function Exercises() {
               </Flex>
             </Card>
        )}
+
        </SimpleGrid>
 
     </Box>

@@ -16,7 +16,7 @@ function Home() {
     <div >
       <header className="Home">
         <Box w='100%' h='30%' p={4} color='white'>
-          <Button onClick={() => console.log(workoutList)}></Button>
+
         <Text fontSize='4xl'>Featured Workouts</Text>
         
     <Box >

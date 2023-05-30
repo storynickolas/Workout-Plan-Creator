@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Button, Input, Card, CardBody, Text, Switch, Box, Center, HStack, Flex, Table, Thead, Tr, Td, Th, Tbody, Heading, Select, Grid, GridItem} from '@chakra-ui/react'
 import AddButton from '../AddButton';
 
@@ -8,14 +8,14 @@ import { ExerciseContext } from '../Exercise.context';
 
 function NewProgram() {
 
-  const {setSearch, groups, setSgroup, searched, allExercises, selected, setSelected} = useContext(ExerciseContext);
+  const {setSearch, groups, setSgroup, searched, allExercises, selected, setSelected, sgroup, search} = useContext(ExerciseContext);
 
   /////////////////////////////////
 
   const [clicked, setClicked] = useState(false)
-  const [newW, setNewW] = useState({name: '', time: 0})
+  const [newW, setNewW] = useState({id: 0, name: '', time: 0, user_id: 0})
 
-  function handleNew(myData: {name: string, time: number}) {
+  function handleNew(myData: {id: number, name: string, time: number, user_id: number}) {
     setNewW(myData)
     setClicked(true)
   }
@@ -23,47 +23,157 @@ function NewProgram() {
   //////////////////////////////////
 
   const [moving, setMoving] = useState('')
-  const [list, setList] = useState< string[]>([''])
+  const [list, setList] = useState([{name: '',exercise_id: 0, workout_id: 0, reps: 0, sets: 0, status: false, user_id: 0}])
+  const [results, setResults] = useState([{id: 0, exercise: {name: ''}}])
 
   function handleOver(e: React.ChangeEvent<any>) {
     e.preventDefault()
   }
 
   function dropIt(e: React.ChangeEvent<any>) {
+    const pos = allExercises.map(e => e.name).indexOf(moving)
     //Add Exercise to Workout
     e.preventDefault()
     let newList = [...list]
-    if(newList[0] === ''){
-      newList[0] = moving
+    if(newList[0].exercise_id === 0){
+      newList[0] = {name: moving, exercise_id: allExercises[pos].id, workout_id: newW.id, reps: 12, sets: 4, status: false, user_id: Number(sessionStorage.getItem('user_id'))}
     }
     else{
-      newList.push(moving)
+      newList.push({name: moving, exercise_id: allExercises[pos].id, workout_id: newW.id, reps: 12, sets: 4, status: false, user_id: Number(sessionStorage.getItem('user_id'))})
     }
     setList([...newList])
 
+
     //Make Exercise No Longer Draggable
-    const pos = allExercises.map(e => e.name).indexOf(moving)
+ 
+    console.log(allExercises[pos])
     let currentExercises = [...selected]
     currentExercises[pos] = false
     setSelected([...currentExercises])
   }
 
 
-  function moreStuff(item: string) {
-    //Remove Exercise from Workout
-    let newList = [...list]
-    newList = newList.filter(word => word !== item)
+  function moreStuff(item: any) {
+    //Remove Exercise from Workout]
+    if(list.length === 1){
+      setList([{name: '',exercise_id: 0, workout_id: 0, reps: 0, sets: 0, status: false, user_id: 0}])
+    }
+    else{
+      let newList = [...list]
+    let cattle = newList.indexOf(item)
+    newList.splice(cattle, 1)
     setList(newList)
+    }
 
+    const puppy = results.map(e => e.exercise.name).indexOf(item.name)
+  
+    fetch(`/workout_exercises/${results[puppy].id}`, { method: "DELETE" }).then((r) => {
+      if (r.ok) {
+        console.log('success');
+      }
+    });
+    
+    
     //Make Exercise Draggable Again
-    const pos = allExercises.map(e => e.name).indexOf(item)
+    const pos = allExercises.map(e => e.name).indexOf(item.name)
     let currentExercises = [...selected]
     currentExercises[pos] = true
     setSelected(currentExercises)
   }
 
+  function handleSwitch(donkey: any, cow: number) {
+    let newList = [...list]
+    let newitem = donkey
+    newitem.status = true
+    newList[cow] = newitem
+    setList([...newList])
+
+
+
+
+    let dog = {
+      exercise_id: donkey.exercise_id,
+      workout_id: donkey.workout_id,
+      reps: donkey.reps,
+      sets: donkey.sets, 
+
+    }
+    console.log(dog)
+    console.log(cow)
+    fetch(`/workout_exercises`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: JSON.stringify(dog),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if(response.errors){
+          // setStatus(response.errors)
+          console.log(response.errors)
+        }
+        else {
+          // setStatus(['Successfully Added'])
+          // dispatch(addBeer(response));
+          let squirel = [...results]
+          if(squirel.length === 1){
+            setResults([response])
+          }
+          else{
+            squirel.push(response)
+     
+          setResults([...squirel])
+          }
+
+
+        }
+      })
+
+
+
+  }
+
+  function handleReps(e: React.ChangeEvent<any>, donkey: any, cow: number) {
+    let newList = [...list]
+    let newitem = donkey
+    newitem.reps = Number(e.target.value)
+    newList[cow] = newitem
+    setList([...newList])
+  }
+
+  function handleSets(e: React.ChangeEvent<any>, donkey: any, cow: number) {
+    let newList = [...list]
+    let newitem = donkey
+    newitem.sets = Number(e.target.value)
+    newList[cow] = newitem
+    setList([...newList])
+  }
+
+  useEffect(() => {
+
+    let res = new Array(allExercises.length).fill(true)
+    console.log(res)
+    setSelected(res)
+
+  }, []);
+
+
+
   return (
+
     <Box bg='grey' w='100%' h='100%' minH={'100vh'} p={4} color='white'>
+      <Button onClick={() => console.log(list)}>Click Me</Button>
+      {Number(sessionStorage.getItem('user_id')) === 0 ? 
+      <Grid
+      h='80vh'
+
+      gap={4}
+    > <GridItem  bg='tomato' >
+      <Center>Log In</Center>
+      </GridItem></Grid>
+      :
       <Grid
         h='200px'
         templateRows='repeat(2, 1fr)'
@@ -73,11 +183,11 @@ function NewProgram() {
         <GridItem rowSpan={2} colSpan={1} bg='tomato' minH='80vh'>
           <Box padding={4}>
             <Heading>Exercises</Heading>
-            <Input placeholder='Search...' bgColor={'white'} color='teal' onChange={(e) => setSearch(e.target.value)}/>
+            <Input placeholder='Search...' bgColor={'white'} color='teal' onChange={(e) => setSearch(e.target.value)} defaultValue={search}/>
             <Box overflowY="auto" maxHeight="60vh">
               <Table variant="simple" colorScheme="teal">
                 <Thead position="sticky" top={0} bgColor="grey">
-                  <Select onChange={(e) =>  setSgroup(e.target.value)}>
+                  <Select onChange={(e) =>  setSgroup(e.target.value)} defaultValue={sgroup}>
                     {
                       groups.map((item: string) => 
                         <option value={item} >{item}</option>
@@ -105,34 +215,52 @@ function NewProgram() {
             </Box>
           </Box>
         </GridItem>
-        <GridItem rowSpan={2} colSpan={4} bg='tomato' >
-          {clicked ? <Text fontSize='6xl'>{newW.name}</Text> : ''}
+
+
+        <GridItem rowSpan={2} colSpan={4} bg='tomato'  minH='80vh'>
+        <Box padding={4} overflowY={'scroll'} maxH={'80vh'}>
+          {/* <Box w='100%' maxW={'70vw'}> */}
+          
+
+            <Box bg={'red'}  w='100%' >
+
+                  {clicked ? <Text fontSize='6xl'>{newW.name}</Text> : ''}
           {clicked ? <Text fontSize='4xl'>{newW.time} minutes</Text> : ''}
+               </Box>
+                <Box overflow={'scroll'} >
+              
+                
   {
-      list[0] === '' ? '' : list.map((item) => 
-        <Card maxH='200px' >
-        <CardBody >
-          <Center >
-            <HStack spacing={8}>
-              <Text fontSize='xl'>{item}</Text>
-              <Text fontSize='sm'>Reps</Text>
-              <Input defaultValue={12} width={'50px'}></Input>
-              <Text fontSize='sm'>Sets</Text>
-              <Input defaultValue={4} width={'50px'}></Input>
-              <Text fontSize='md'>Confirm:   <Switch size='lg' /></Text>
-              <Button onClick={() => moreStuff(item)}>Remove</Button>
-            </HStack>
-          </Center>
-        </CardBody>
-        </Card>
+      
+      list[0].name === '' ? '' : list.map((item, index) => 
+      <Card >
+        <Grid templateColumns='repeat(7, 1fr)' padding={10} gap={6} justifyItems={'center'} alignItems={'center'}>
+
+              <Text fontSize='2xl'>{item.name}</Text>
+              <Text>Reps</Text>
+              <Input defaultValue={12} width={'50px'} onChange={(e) => handleReps(e, item, index)}></Input>
+              <Text>Sets</Text>
+          <Input defaultValue={4} width={'50px'} onChange={(e) => handleSets(e, item, index)}></Input>
+              <Text>Confirm:   <Switch size='lg' onChange={() => handleSwitch(item, index)} isDisabled={item.status}/></Text>
+           <GridItem w='15%'><Button onClick={() => moreStuff(item)}>Remove</Button></GridItem>
+
+              </Grid>
+       </Card> 
       )}
       
+
+      </Box>
+
+
       {clicked ?
         <Card minWidth='90%'>
           <div className='Drop' onDragOver={handleOver} onDrop={dropIt} >
             Add an Exercise
           </div>
         </Card> : ''}
+
+
+        {/* /////////////////////////////////// */}
 
       {newW.name === '' ?    <Flex
         flexDirection="column"
@@ -153,9 +281,15 @@ function NewProgram() {
         </Box>
           </Flex> : ''
       }
+
+  {/* /////////////////////////////////// */}
+
+        </Box>
       </GridItem>
     </Grid>
+}
   </Box>
+    
   );
 }
 

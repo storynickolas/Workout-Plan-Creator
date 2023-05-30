@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import { FormControl, Button, FormLabel, Input, Modal, ModalOverlay, ModalContent, ModalBody, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure} from '@chakra-ui/react'
 
-function AddButton({ handleNew } : {handleNew : (response: {name: string, time: number}) => void}) {
+function AddButton({ handleNew } : {handleNew : (response: {id: number, name: string, time: number, user_id: number}) => void}) {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [workout, setWorkout] = useState('')
   const [time, setTime] = useState('')
 
+
+
   function handleSave() {
+    let lizard = Number(sessionStorage.getItem('user_id'))
     let cow = {
       name: workout,
-      time: Number(time)
+      time: Number(time),
+      user_id: lizard
     }
     console.log(cow)
     fetch(`/workouts`, {
@@ -30,6 +34,8 @@ function AddButton({ handleNew } : {handleNew : (response: {name: string, time: 
         else {
           // setStatus(['Successfully Added'])
           // dispatch(addBeer(response));
+          console.log(cow)
+          console.log(response)
           handleNew(response)
 
         }

@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 
 // create context
-const WorkoutContext = createContext(['test']);
+const WorkoutContext = createContext([{id: 0, name: '', time: 0, user_id: 0, workout_exercises: []}]);
 
 type ContainerProps = {
   children: React.ReactNode; 
@@ -11,7 +11,7 @@ type ContainerProps = {
 const WorkoutContextProvider = (props: ContainerProps) => {
 
   const [workoutList, setWorkoutList] = useState([]);
-
+  
 
   useEffect(() => {
     fetch("/workouts").then((response) => {

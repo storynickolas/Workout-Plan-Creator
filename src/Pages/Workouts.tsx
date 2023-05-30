@@ -40,9 +40,9 @@ function Workouts( ) {
   }
 
   return (
-    <Box bg='tomato' h='100%' minH='100vh' w='100%'>
-      <Text fontSize='4xl'>Featured Workouts</Text>
-        <SimpleGrid minChildWidth='300px' spacing='10px'>
+    <Box bg='grey' h='100%' minH='100vh' w='100%'>
+      <Text color='white' fontSize='6xl'>All Workouts</Text>
+        <SimpleGrid minChildWidth='300px' spacing='10px' overflowY={'scroll'} maxH={'80vh'}>
         {
         workoutList.map((item: any) => 
                 <Card >
