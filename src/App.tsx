@@ -16,6 +16,9 @@ import React, { useEffect, useState, useContext } from 'react';
 import { WorkoutContext, WorkoutContextProvider } from './Workout.context'
 import { UserContext, UserContextProvider } from './User.context'
 import { ExerciseContext, ExerciseContextProvider } from './Exercise.context'
+import WorkoutDay from './Pages/WorkoutDay';
+import EditDay from './Pages/EditDay';
+import NewDay from './Pages/NewDay';
 
 function App() {
 
@@ -104,9 +107,20 @@ function App() {
           <Signup />
 
       </Route>
+   <Route exact path='/workout_days/new'>
+        <NewDay />
+      </Route>
       <Route exact path='/workouts/:id'>
               <Workout />
             </Route>
+
+      <Route exact path='/workout_days/:id'>
+        <WorkoutDay />
+      </Route>
+      <Route exact path='/workout_days/:id/edit'>
+        <EditDay />
+      </Route>
+   
       </Switch>
     </div>
 </ExerciseContextProvider>

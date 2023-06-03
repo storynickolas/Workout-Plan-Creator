@@ -60,12 +60,12 @@ function Exercises() {
       </SimpleGrid>
         <SimpleGrid
         background='teal'
-         maxH='40vh' gridAutoColumns='minmax(200px, auto)' autoFlow='column' overflowX={'auto'} padding={10} gap={6}>
+         maxH='40vh' gridAutoColumns='minmax(200px, 100px)' autoFlow='column' overflowX={'auto'} padding={10} gap={6}>
 
          
         {
           searched.map((item) => 
-            <Card onClick={() => handleClick(item)} cursor='pointer' alignContent={'center'} justifyContent={'center'}>
+            <Card minH='25vh' maxW='200px' onClick={() => handleClick(item)} cursor='pointer' alignContent={'center'} justifyContent={'center'}>
               
               <Flex>
               <CardBody > 

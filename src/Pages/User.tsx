@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Card, Button, CardBody, Text, Stack, UnorderedList, ListItem, Box, TableContainer, Tr, Td, Table, VStack } from '@chakra-ui/react'
+import { Card, Button, CardBody, Text, Stack, SimpleGrid, ListItem, Box, TableContainer, Tr, Td, Table, VStack } from '@chakra-ui/react'
 import { useHistory } from 'react-router-dom'
 import { UserContext } from '../User.context';
 import { AddIcon, StarIcon, InfoOutlineIcon } from '@chakra-ui/icons'
+import AddDay from '../AddDay';
+
 
 // import { Card, Button, CardBody, Text, SimpleGrid, UnorderedList, ListItem, Stack, Box } from '@chakra-ui/react'
 // import { AddIcon, StarIcon, InfoOutlineIcon } from '@chakra-ui/icons'
@@ -58,7 +60,7 @@ function User() {
 
   useEffect(() => {
 
-    let cow = user.schedule.id
+    let cow = user.id
 
     console.log(cow)
 
@@ -67,12 +69,28 @@ function User() {
         response.json().then((user) => 
         {
           console.log(user)
+          console.log('Testerooo')
           let newWeek = myWeek
-          newWeek[week.indexOf(user[0].workout_days[0].day)] = user[0].workout_days[0]
-          newWeek[week.indexOf(user[0].workout_days[1].day)] = user[0].workout_days[1]
+          console.log(user)
+          console.log('Wroooooong')
+          // console.log(myWeek)
+          console.log(user[0].workout_days.length + 'Alligator ')
+          console.log(newWeek[week.indexOf(user[0].workout_days[0].day)] )
+          
+          if(user.id !== 0 && user[0].workout_days.length > 0){
+
+            for (let i = 0; i < user[0].workout_days.length; i++) {
+              newWeek[week.indexOf(user[0].workout_days[i].day)] = user[0].workout_days[i]
+            }
+            console.log('Dog')
+
+          }
+
           setWw([...newWeek])
           console.log('Testing User Page')
           console.log(myWeek)
+          console.log('Fishes')
+          console.log(newWeek)
         });
       }
     });
@@ -89,54 +107,48 @@ function User() {
         <Button onClick={() => getInfo()}>Test</Button>
 
       <Box bg='teal'>
+      <Text fontSize={'6xl'}>My Weekly Schedule</Text>
         {/* <SimpleGrid columns={7} minChildWidth={'120px'} overflowX={'auto'} > */}
         <TableContainer>
         <Table >
         <Tr>
         {ww.map((item: any) => 
                 <Td textAlign={'center'} border={'2px solid'}>
-                  
                   <Text >{item.day}</Text>
                   {item.workout ? <VStack><Text >{item.workout.name}</Text> 
-                  <Button onClick={() => history.push(`/workouts/${item.workout.id}`)}>Go To Workout</Button>
-                  <Button onClick={() => alert('Remove')}>Edit</Button>
-                  </VStack>: ''}
-                  {item.workout ? '' : <Button onClick={() => alert(item.day)}>Add Workout</Button> }
-  
                   
- 
-                
+                  </VStack>: ''}
+                  {item.workout ? <Button onClick={() => history.push(`/workout_days/${item.id}`, {item})}>Go To Day</Button> 
+                  : <Button onClick={() => history.push('/workout_days/new', {day: item.day, saved: user.saved_workouts})}>Add Workout</Button>}
+
                 </Td>
         )}
         </Tr>
         </Table>
         </TableContainer>
       </Box>
-      <Button onClick={() => console.log(mySaved)}>Click Me</Button>
+     <Text fontSize={'4xl'}>My Saved Workouts</Text>
+      {/* <Button onClick={() => console.log(mySaved)}>Click Me</Button> */}
+       <SimpleGrid minChildWidth='300px' spacing='10px' overflowY={'scroll'} maxH={'80vh'}>
       {
-       user.saved_workouts[0].id !== 0 ? user.saved_workouts.map((item: any) => 
+       user.id !== 0  ? user.saved_workouts.map((item: any) => 
                 <Card >
+
                 <CardBody>
                   <Text fontSize='2xl'>{item.workout.name}</Text>
                   <Text fontSize='md'>{item.workout.time} Minutes</Text>
     
-            
-                  {/* <UnorderedList>{
-                  item.workout_exercises.map((info: any) => 
-                    <ListItem fontSize='md' textAlign='left'>
-                      {info.exercise.name} {info.sets}x{info.reps}
-                    </ListItem>)}
-                  </UnorderedList>
-                  {item.reviews.length > 0 ? <Text fontSize='md' as='i'>"{item.reviews[0].write_up}"</Text> : ''} */}
                    <Stack direction='row' spacing='10px' justify={'center'}>
                     <Button leftIcon={<InfoOutlineIcon/>} onClick={() => history.push(`/workouts/${item.workout_id}`)} colorScheme='teal' variant='solid'>
                       More Info
                     </Button>
+                    <Button onClick={() => console.log(item)}>New Button</Button>
                   </Stack>
                   </CardBody>
                  
                 </Card> 
        ) : '' }
+       </SimpleGrid>
        </Box>
        : <Text>Please Log In</Text> } 
      </Box>
