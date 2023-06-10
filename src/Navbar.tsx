@@ -10,15 +10,6 @@ import { UserContext } from './User.context';
 function Navbar() {
   const {user, setUser} = useContext(UserContext)
 
-
-
-
-  useEffect(() => {
-      console.log(user)
-    }, [user, ]);
-
-    
-
   return (
     <div>
       <Link to={`/`} >

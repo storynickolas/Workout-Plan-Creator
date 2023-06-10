@@ -24,13 +24,10 @@ const UserContextProvider = (props: ContainerProps) => {
   let cow = sessionStorage.getItem('user_id')
 
   useEffect(() => {
-    console.log(user)
     fetch(`/users/${sessionStorage.getItem('user_id')}`).then((response) => {
       if (response.ok) {
         response.json().then((user) => 
         {
-          console.log(user)
-          console.log("Testing Stuff")
           setUser(user[0])
         });
       }

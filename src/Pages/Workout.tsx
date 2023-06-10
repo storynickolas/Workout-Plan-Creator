@@ -11,11 +11,30 @@ function Workout( ) {
   const {workoutList, setWorkoutList} = useContext(WorkoutContext);
   const [video, setVideo] = useState('')
   const [name, setName] = useState('')
+  const [direct, setDirect] = useState('')
   const [loading, setLoading] = useState(true)
   const history = useHistory();
   type itemIdParams = {
     id: string;
   };
+
+  interface dataType {
+    redirect: {path: string}
+  }
+  // [ {id: number, exercise: {name: string, id: number}, sets: number, reps: number}]
+  
+  let data : dataType = history.location.state as {redirect: {path: '' }}
+
+  useEffect(() => {
+
+    if(history.location.state && data?.redirect?.path !== '') {
+      setDirect(data.redirect.path)
+  }
+  else{
+    setDirect('workouts')
+  }
+}, [data]
+  )
 
   function handleClick(info: any) {
 
@@ -63,7 +82,7 @@ function Workout( ) {
   return (
     <Box bg='grey' w='100%' h='100%' minH='100vh' p={4} color='white'>
       {loading === false  ? '' : <Spinner size='xl' />}
-      <Button onClick={() => console.log(cow)}>Test</Button>
+      <Button onClick={() => console.log(direct)}>Test</Button>
       <Button onClick={() => console.log(Number(sessionStorage.getItem('user_id')))}>Testing 2</Button>
       <Button onClick={() => handleDelete()}>Delete</Button>
 
@@ -126,7 +145,7 @@ function Workout( ) {
                   {cow.reviews.length > 0 ? <Text fontSize='md' as='i'>"{cow.reviews[0].write_up}"</Text> : ''}
                    <Stack direction='row' spacing='10px' justify={'center'}>
   
-                    <Button leftIcon={<InfoOutlineIcon />} colorScheme='teal' variant='solid' onClick={() => history.push(`/workouts`)}>
+                    <Button leftIcon={<InfoOutlineIcon />} colorScheme='teal' variant='solid' onClick={() => history.push(`/${direct}`)}>
                       Back
                     </Button>
                     <Button rightIcon={<AddIcon />} colorScheme='teal' variant='outline' onClick={() => console.log(cow.id)}>

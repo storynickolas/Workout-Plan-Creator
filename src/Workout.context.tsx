@@ -29,7 +29,6 @@ const WorkoutContextProvider = (props: ContainerProps) => {
       if (response.ok) {
         response.json().then((user) => 
         {
-          console.log(user)
           setWorkoutList(user)
         });
       }

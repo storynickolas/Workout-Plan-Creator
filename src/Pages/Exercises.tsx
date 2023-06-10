@@ -1,18 +1,15 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Card, Button, CardBody, Text, SimpleGrid, AspectRatio, Box, Center, Input, Flex, Grid } from '@chakra-ui/react'
-
+import { useState, useContext } from 'react';
+import { Card, Button, CardBody, Text, SimpleGrid, AspectRatio, Box, Center, Input, Flex } from '@chakra-ui/react'
 import { ExerciseContext } from '../Exercise.context';
 
-
 function Exercises() {
-  // const [search, setSearch] = useState('')
 
-  const {exercises, setSearch, groups, sgroup, setSgroup, searched, search} = useContext(ExerciseContext);
+  const {setSearch, groups, sgroup, setSgroup, searched, search} = useContext(ExerciseContext);
 
   const [selected, setSelected] = useState(
     {
-      name: "",
-      video: '',
+      name: "Dumbbell Row",
+      video: 'https://www.youtube.com/embed/roCP6wCXPqo',
       muscle_group: ''
     }
   )
@@ -31,23 +28,23 @@ function Exercises() {
 
   return (
     <Box bg='grey' w='100%' h='100%' minH='100vh' p={4} color='white'>
-        <Text fontSize='4xl'>Exercises</Text>
-
+        <Text color='white' fontSize='6xl'>Exercises</Text>
       <SimpleGrid columns={1} >
         <Center >
-        <Box bg='tomato' width='600px' onClick={() => console.log(selected)}>
-          {selected.video === '' ? <Box minH={'30vh'}><Text>Select an Exercise</Text></Box> : <Box>
+        <Box bg='teal' width='600px'>
+      
+
+          <Box minH={'30vh'}>
           <AspectRatio maxW='1000px' ratio={5 / 3}>
           <iframe  src={selected.video} width="100%" title="YouTube video player" />
           </AspectRatio>
-          <Text fontSize='2xl'>{selected.name}</Text></Box>
-          }
-           
+          </Box>
+           <Text fontSize='2xl'>{selected.name}</Text>  
         </Box>
         </Center>
 
-        <Input placeholder='Search...' bgColor={'white'} color='teal' onChange={(e) => setSearch(e.target.value)} defaultValue={search}/>
-        
+        <Box minH={'5vh'}>
+      </Box>
       </SimpleGrid>
         <SimpleGrid minChildWidth='75px' spacing='10px' >
         {
@@ -58,6 +55,9 @@ function Exercises() {
           )
       }
       </SimpleGrid>
+      <Box>
+      <Input placeholder='Search...' bgColor={'white'} color='teal' onChange={(e) => setSearch(e.target.value)} defaultValue={search}/>
+      </Box>
         <SimpleGrid
         background='teal'
          maxH='40vh' gridAutoColumns='minmax(200px, 100px)' autoFlow='column' overflowX={'auto'} padding={10} gap={6}>

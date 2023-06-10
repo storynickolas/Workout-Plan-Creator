@@ -114,6 +114,10 @@ function App() {
               <Workout />
             </Route>
 
+            <Route exact path='/workouts/:id/edit'>
+              <NewProgram />
+            </Route>
+
       <Route exact path='/workout_days/:id'>
         <WorkoutDay />
       </Route>

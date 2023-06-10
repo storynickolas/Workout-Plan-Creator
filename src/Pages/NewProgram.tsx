@@ -3,6 +3,8 @@ import { Button, Input, Card, Text, Switch, Box, Center, Flex, Table, Thead, Tr,
 import AddButton from '../AddButton';
 
 import { ExerciseContext } from '../Exercise.context';
+import { useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom';
 
 
 
@@ -10,17 +12,34 @@ function NewProgram() {
 
   const {setSearch, groups, setSgroup, searched, allExercises, selected, setSelected, sgroup, search} = useContext(ExerciseContext);
 
-  /////////////////////////////////
+  ///////////////////////////////// newW = workout
+  const history = useHistory();
+
+  interface dataType {
+    item: {id: number, name: string, time: number, user_id: number, workout_exercises: any[]}
+  }
+  // [ {id: number, exercise: {name: string, id: number}, sets: number, reps: number}]
+
+  let data : dataType = history.location.state as {item: {id: 0, name: '', time: 0, user_id: 0, workout_exercises: [{id: 0, exercise: {name: '', id: 0}, sets: 0, reps: 0}]}}
+
+  type itemIdParams = {
+    id: string;
+  };
+
+  const { id } = useParams<itemIdParams>();
 
   const [clicked, setClicked] = useState(false)
   const [newW, setNewW] = useState({id: 0, name: '', time: 0, user_id: 0})
 
   function handleNew(myData: {id: number, name: string, time: number, user_id: number}) {
     setNewW(myData)
-    setClicked(true)
+    if(myData.name !== ''){
+      setClicked(true)
+    }
+    
   }
 
-  //////////////////////////////////
+  ////////////////////////////////// list = workout_exercises
 
   const [moving, setMoving] = useState('')
   const [list, setList] = useState([{name: '',exercise_id: 0, workout_id: 0, reps: 0, sets: 0, status: false, user_id: 0}])
@@ -35,7 +54,7 @@ function NewProgram() {
     //Add Exercise to Workout
     e.preventDefault()
     let newList = [...list]
-    if(newList[0].exercise_id === 0){
+    if(newList[0]?.exercise_id === 0){
       newList[0] = {name: moving, exercise_id: allExercises[pos].id, workout_id: newW.id, reps: 12, sets: 4, status: false, user_id: Number(sessionStorage.getItem('user_id'))}
     }
     else{
@@ -43,6 +62,8 @@ function NewProgram() {
     }
     setList([...newList])
 
+
+  
 
     //Make Exercise No Longer Draggable
  
@@ -52,6 +73,38 @@ function NewProgram() {
     setSelected([...currentExercises])
   }
 
+    useEffect(() => {
+      if(data) {
+
+      
+      handleNew(data.item)
+
+  
+      let dog = data.item.user_id
+
+      interface cowType {
+        name: string, exercise_id: number, workout_id: number, reps: number, sets: number, status: boolean, user_id: number
+      };
+    
+    let cow : cowType[] = [];
+
+    console.log(data)
+
+    // [{id: 0, exercise: {name: '', id: 0}, sets: 0, reps: 0}]
+
+    if(data?.item?.workout_exercises[0]?.exercise?.id !== 0){
+        data.item.workout_exercises.forEach((item) => {
+        cow.push({name: item.exercise.name, exercise_id: item.exercise.id, workout_id: item.id, reps: item.reps, sets: item.reps, status: true, user_id: dog})
+      })
+    }
+
+    
+  
+        setList([...cow])
+  }
+      
+  
+    }, [data]);
 
   function moreStuff(item: any) {
     //Remove Exercise from Workout]
@@ -88,9 +141,6 @@ function NewProgram() {
     newList[cow] = newitem
     setList([...newList])
 
-
-
-
     let dog = {
       exercise_id: donkey.exercise_id,
       workout_id: donkey.workout_id,
@@ -126,13 +176,8 @@ function NewProgram() {
      
           setResults([...squirel])
           }
-
-
         }
       })
-
-
-
   }
 
   function handleReps(e: React.ChangeEvent<any>, donkey: any, cow: number) {
@@ -157,6 +202,9 @@ function NewProgram() {
     console.log(res)
     setSelected(res)
 
+    console.log(newW)
+    console.log(list)
+
   }, []);
 
 
@@ -164,7 +212,7 @@ function NewProgram() {
   return (
 
     <Box bg='grey' w='100%' h='100%' minH={'100vh'} p={4} color='white'>
-      <Button onClick={() => console.log(list)}>Click Me</Button>
+      <Button onClick={() => console.log(id)}>Click Me</Button>
       {Number(sessionStorage.getItem('user_id')) === 0 ? 
       <Grid
       h='80vh'
@@ -224,15 +272,15 @@ function NewProgram() {
 
             <Box bg={'red'}  w='100%' >
 
-                  {clicked ? <Text fontSize='6xl'>{newW.name}</Text> : ''}
-          {clicked ? <Text fontSize='4xl'>{newW.time} minutes</Text> : ''}
+                  {clicked && newW.name !== '' ? <Text fontSize='6xl'>{newW.name}</Text> : ''}
+          {clicked && newW.name !== '' ? <Text fontSize='4xl'>{newW.time} minutes</Text> : ''}
                </Box>
                 <Box overflow={'scroll'} >
               
                 
   {
       
-      list[0].name === '' ? '' : list.map((item, index) => 
+      list[0]?.name === '' ? '' : list.map((item, index) => 
       <Card >
         <Grid templateColumns='repeat(7, 1fr)' padding={10} gap={6} justifyItems={'center'} alignItems={'center'}>
 

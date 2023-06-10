@@ -2,8 +2,9 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Card, Button, CardBody, Text, Stack, SimpleGrid, ListItem, Box, TableContainer, Tr, Td, Table, VStack } from '@chakra-ui/react'
 import { useHistory } from 'react-router-dom'
 import { UserContext } from '../User.context';
-import { AddIcon, StarIcon, InfoOutlineIcon } from '@chakra-ui/icons'
+import { AddIcon, StarIcon, InfoOutlineIcon} from '@chakra-ui/icons'
 import AddDay from '../AddDay';
+import { IoHeartSharp } from "react-icons/io5";
 
 
 // import { Card, Button, CardBody, Text, SimpleGrid, UnorderedList, ListItem, Stack, Box } from '@chakra-ui/react'
@@ -14,9 +15,11 @@ function User() {
   const [ww, setWw] = useState([{day: "Sunday"}, {day: "Monday"}, {day: "Tuesday"}, {day: "Wednesday"}, {day: "Thursday"}, {day: "Friday"}, {day: "Saturday"}])
   const {user, setUser} = useContext(UserContext)
 
+  const [myWorkouts, setMyWorkouts] = useState([])
+
   const week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
   let myWeek = [{day: "Sunday"}, {day: "Monday"}, {day: "Tuesday"}, {day: "Wednesday"}, {day: "Thursday"}, {day: "Friday"}, {day: "Saturday"}]
-
+  let redirect = {path: 'myPage'}
 
   // const { username, changeUser } = useContext(UserContext);
   const history = useHistory();
@@ -55,6 +58,28 @@ function User() {
     //   }
     // });
   }
+
+  function handleDelete(id: number) {
+    fetch(`/workouts/${id}`, { method: "DELETE" }).then((r) => {
+      if (r.ok) {
+        console.log('Deleted');
+        // sessionStorage.setItem('user', 'Tom')
+
+      }
+    });
+  }
+
+  function handleRemove(id: number) {
+    fetch(`/saved_workouts/${id}`, { method: "DELETE" }).then((r) => {
+      if (r.ok) {
+        console.log('Deleted');
+        // sessionStorage.setItem('user', 'Tom')
+
+      }
+    });
+  }
+
+
 
 
 
@@ -97,6 +122,27 @@ function User() {
 
   }, [user]);
 
+
+  useEffect(() => {
+
+    let cow = Number(sessionStorage.getItem('user_id'))
+
+    fetch(`/user_workouts/${cow}`).then((response) => {
+      if (response.ok) {
+        response.json().then((user) => 
+        {
+          console.log('Taco')
+          console.log(user)
+          setMyWorkouts(user)
+
+        });
+      }
+    });
+
+  }, []);
+
+  
+
   return (
     
     <Box bg='grey' w='100%' h='100vh' p={4} color='white'>
@@ -107,6 +153,7 @@ function User() {
         <Button onClick={() => getInfo()}>Test</Button>
 
       <Box bg='teal'>
+
       <Text fontSize={'6xl'}>My Weekly Schedule</Text>
         {/* <SimpleGrid columns={7} minChildWidth={'120px'} overflowX={'auto'} > */}
         <TableContainer>
@@ -119,7 +166,7 @@ function User() {
                   
                   </VStack>: ''}
                   {item.workout ? <Button onClick={() => history.push(`/workout_days/${item.id}`, {item})}>Go To Day</Button> 
-                  : <Button onClick={() => history.push('/workout_days/new', {day: item.day, saved: user.saved_workouts})}>Add Workout</Button>}
+                  : <Button onClick={() => history.push('/workout_days/new', {day: item.day, saved: user.saved_workouts, user: user.id})}>Add Workout</Button>}
 
                 </Td>
         )}
@@ -127,7 +174,7 @@ function User() {
         </Table>
         </TableContainer>
       </Box>
-     <Text fontSize={'4xl'}>My Saved Workouts</Text>
+     <Text fontSize={'4xl'}>Saved Workouts</Text>
       {/* <Button onClick={() => console.log(mySaved)}>Click Me</Button> */}
        <SimpleGrid minChildWidth='300px' spacing='10px' overflowY={'scroll'} maxH={'80vh'}>
       {
@@ -139,17 +186,45 @@ function User() {
                   <Text fontSize='md'>{item.workout.time} Minutes</Text>
     
                    <Stack direction='row' spacing='10px' justify={'center'}>
-                    <Button leftIcon={<InfoOutlineIcon/>} onClick={() => history.push(`/workouts/${item.workout_id}`)} colorScheme='teal' variant='solid'>
+                    <Button leftIcon={<InfoOutlineIcon/>} onClick={() => history.push(`/workouts/${item.workout_id}`, {redirect})} colorScheme='teal' variant='solid'>
                       More Info
                     </Button>
-                    <Button onClick={() => console.log(item)}>New Button</Button>
+                    <Button onClick={() => handleRemove(item.workout.id)}>
+                      Remove
+                      </Button>
                   </Stack>
                   </CardBody>
                  
                 </Card> 
        ) : '' }
        </SimpleGrid>
+       <Text fontSize={'4xl'}>My Workouts</Text>
+
+       <SimpleGrid minChildWidth='300px' spacing='10px' overflowY={'scroll'} maxH={'80vh'}>
+      {
+       myWorkouts.length !== 0  ? myWorkouts.map((item: any) => 
+                <Card >
+
+                <CardBody>
+                  <Text fontSize='2xl'>{item.name}</Text>
+                  <Text fontSize='md'>{item.time} Minutes</Text>
+    
+                   <Stack direction='row' spacing='10px' justify={'center'}>
+                    <Button leftIcon={<InfoOutlineIcon/>} onClick={() => history.push(`/workouts/${item.id}`, {redirect})} colorScheme='teal' variant='solid'>
+                      More Info
+                    </Button>
+                    <Button onClick={() => history.push(`/workouts/${item.id}/edit`, {item})}>Edit Workout</Button>
+                    <Button onClick={() => handleDelete(item.id)}>Delete</Button>
+                    
+                  </Stack>
+                  </CardBody>
+                 
+                </Card> 
+       ) : '' }
+       </SimpleGrid>
+       
        </Box>
+       
        : <Text>Please Log In</Text> } 
      </Box>
   );

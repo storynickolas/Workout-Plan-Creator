@@ -49,18 +49,15 @@ const ExerciseContextProvider = (props: ContainerProps) => {
   const [selected, setSelected] = useState< (string | boolean)[] | [] >([])
 
   useEffect(() => {
-    console.log('Sending')
     if(allExercises[0].name === '') {
       fetch("/exercises").then((response) => {
         if (response.ok) {
           response.json().then((user) => 
           {
-            console.log(user)
             setAllExercises(user)
             setSearched(user)
             
             let res = new Array(user.length).fill(true)
-            console.log(res)
             setSelected(res)
           })
       }});

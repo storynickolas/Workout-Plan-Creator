@@ -1,19 +1,10 @@
 import { useState, useContext, useEffect } from "react";
-import { Link } from 'react-router-dom';
 import {
   Flex,
   Heading,
-  Input,
   Button,
-  InputGroup,
-  Stack,
   Box,
-  Avatar,
-  InputRightElement,
   Text,
-  FormControl,
-  useStatStyles,
-
 } from "@chakra-ui/react";
 
 import weights from '../Weights.jpg';
@@ -34,12 +25,12 @@ const EditDay = () => {
   const history = useHistory();
 
 
-  type QuizParams = {
+  type idTypes = {
     id: string;
   };
 
   
-  const { id } = useParams<QuizParams>();
+  const { id } = useParams<idTypes>();
 
 
 

@@ -95,6 +95,19 @@ const WorkoutDay = () => {
 
   }, []);
 
+  function handleDelete() {
+    fetch(`/workout_days/${id}`, {
+      method: "DELETE",
+    }).then((r) => {
+      if (r.ok) {
+        // dispatch(remove(myreview))
+        console.log('Removed')
+        history.replace(`/mypage`)
+      }
+    })
+
+  }
+
 
 
 
@@ -118,8 +131,8 @@ const WorkoutDay = () => {
             
 
 
-        {data ? <Text fontSize={'4xl'}>{data.item.day}</Text> : '' }
-        {data ? <Text fontSize={'3xl'}>{data.item.workout.name}</Text> : '' }
+        {data?.item?.day ? <Text fontSize={'4xl'}>{data.item.day}</Text> : '' }
+        {data?.item?.workout?.name ? <Text fontSize={'3xl'}>{data.item.workout.name}</Text> : '' }
         {
        plan.length > 0 && plan[0].exercise.name !== ''  ? plan.map((item: any, index) => 
 <AccordionItem>
@@ -144,6 +157,7 @@ const WorkoutDay = () => {
        ) : '' }
        </Accordion>
        <Button onClick={() => history.replace('/myPage')}>Return to Schedule</Button>
+       <Button onClick={() => handleDelete()}>Clear Day</Button>
 
 
   

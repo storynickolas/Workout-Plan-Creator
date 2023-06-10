@@ -23,8 +23,6 @@ import { UserContext } from '../User.context';
 import { useParams } from 'react-router-dom';
 
 
-
-
 const NewDay = () => {
   // type data = {
   //   name: string,
@@ -33,11 +31,9 @@ const NewDay = () => {
   // let data = {name: '', saved: [{name: ''}]}
 
   const history = useHistory();
-  const data = history.location.state as {day: string, saved: []}
+  const data = history.location.state as {day: string, saved: [], user: number}
 
   const [selectedWorkout, setSelectedWorkout] = useState('')
-
-
 
   // const [day, setDay] = useState({day: '', workout: {id: 0, name: ''}});
 
@@ -82,12 +78,32 @@ const NewDay = () => {
   function handleAdd() {
     let cow = {
       'day': data.day,
-      'workout': selectedWorkout
+      'workout_id': Number(selectedWorkout),
+      'schedule_id': data.user
     }
-    console.log(cow)
+    fetch(`/workout_days`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: JSON.stringify(cow),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if(response.errors){
+
+          console.log(response.errors)
+        }
+        else {
+
+          console.log(response)
+
+        history.replace(`/mypage`)
+
+        }
+      })
   }
-
-
 
 
   return (
@@ -111,8 +127,8 @@ const NewDay = () => {
         <Text>Select from saved workouts</Text>
         <Select placeholder='Workout' onChange={(e) => handleChange(e.target.value)}>
         {
-       data && data.saved.length !== 0  ? data.saved.map((item: any) => 
-          <option value={item.workout.name}>{item.workout.name}</option>
+       data?.saved.length !== 0  ? data.saved.map((item: any) => 
+          <option value={item.workout.id}>{item.workout.name}</option>
        ) : '' }
       
         </Select>
