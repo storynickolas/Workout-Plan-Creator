@@ -29,6 +29,8 @@ function NewProgram() {
   const { id } = useParams<itemIdParams>();
 
   const [clicked, setClicked] = useState(false)
+
+
   const [newW, setNewW] = useState({id: 0, name: '', time: 0, user_id: 0})
 
   function handleNew(myData: {id: number, name: string, time: number, user_id: number}) {
@@ -217,133 +219,107 @@ function NewProgram() {
 
     <Box bg='grey' w='100%' h='100%' minH={'100vh'} p={4} color='white'>
       <Box bg='tomato'>
-                  {clicked && newW.name !== '' ? <Text fontSize='6xl'>{newW.name}</Text> : ''}
-          {clicked && newW.name !== '' ? <Text fontSize='4xl'>{newW.time} minutes</Text> : ''}
-          </Box>
-      {/* <Button onClick={() => console.log(id)}>Click Me</Button> */}
-      {Number(sessionStorage.getItem('user_id')) === 0 ? 
-      <Grid
-      h='80vh'
 
-      gap={4}
-    > <GridItem  bg='tomato' >
-      <Center>Log In</Center>
-      </GridItem></Grid>
-      :
-      <Grid
-        h='200px'
-        templateRows='repeat(2, 1fr)'
-        templateColumns='repeat(5, 1fr)'
-        gap={4}
-      >
-        <GridItem rowSpan={2} colSpan={1} bg='tomato' minH='80vh'>
-          <Box padding={4}>
-            <Heading>Exercises</Heading>
-            <Input placeholder='Search...' bgColor={'white'} color='teal' onChange={(e) => setSearch(e.target.value)} defaultValue={search}/>
-            <Box overflowY="auto" maxHeight="60vh">
-              <Table variant="simple" colorScheme="teal">
-                <Thead position="sticky" top={0} bgColor="grey">
-                  <Select onChange={(e) =>  setSgroup(e.target.value)} defaultValue={sgroup}>
-                    {
-                      groups.map((item: string) => 
-                        <option value={item} >{item}</option>
-                      )
-                    }
-                  </Select>
-                </Thead>
-                <Tbody >
-                { 
-                allExercises.map((item: {name: string}, index) => 
-                searched.map(e => e.name).indexOf(item.name) !== -1 ? 
-                  <Tr backgroundColor={selected[index] === true ? 'teal' : 'grey'} >
-                    <Td>
-                      <Text 
-                        fontSize='2xl'  
-                        draggable={selected[index] === true ? true : false} 
-                        onDrag={() => setMoving(searched[index].name)}
-                        >{item.name}
-                      </Text>
-                    </Td>
-                  </Tr> : ''
-                )}
-                </Tbody>
-              </Table>
-            </Box>
-          </Box>
-        </GridItem>
+        {clicked && newW.name !== '' ? <Text fontSize='6xl'>{newW.name}</Text> : ''}
+        {clicked && newW.name !== '' ? <Text fontSize='4xl'>{newW.time} minutes</Text> : ''}
 
-
-        <GridItem rowSpan={2} colSpan={4} bg='tomato'  minH='80vh'>
-        <Box padding={4} overflowY={'scroll'} maxH={'80vh'}>
-          {/* <Box w='100%' maxW={'70vw'}> */}
-          
-
-            <Box bg={'red'}  w='100%' >
-
-               </Box>
-                <Box overflow={'scroll'} >
-              
-                
-  {
-      
-      list[0]?.name === '' ? '' : list.map((item, index) => 
-      <Card >
-        <Grid templateColumns='repeat(7, 1fr)' padding={10} gap={6} justifyItems={'center'} alignItems={'center'}>
-
-              <Text fontSize='2xl'>{item.name}</Text>
-              <Text>Reps</Text>
-              <Input defaultValue={12} width={'50px'} onChange={(e) => handleReps(e, item, index)}></Input>
-              <Text>Sets</Text>
-          <Input defaultValue={4} width={'50px'} onChange={(e) => handleSets(e, item, index)}></Input>
-              <Text>Confirm:   <Switch size='lg' onChange={() => handleSwitch(item, index)} isDisabled={item.status}/></Text>
-           <GridItem w='15%'><Button onClick={() => moreStuff(item)}>Remove</Button></GridItem>
-
-              </Grid>
-       </Card> 
-      )}
-      
 
       </Box>
+      
+      <Button onClick={() => console.log(newW)}>Click Me</Button>
+      <Button onClick={() => console.log(clicked)}>Click Me</Button>
 
-
-      {clicked ?
-        <Card minWidth='90%'>
-          <div className='Drop' onDragOver={handleOver} onDrop={dropIt} >
-            Add an Exercise
-          </div>
-        </Card> : ''}
-
-
-        {/* /////////////////////////////////// */}
-
-      {newW.name === '' ?    <Flex
-        flexDirection="column"
-        width="100wh"
-        height="80vh"
-        bgColor='tomato'
-
-        justifyContent="center"
-        alignItems="center"
-        >
-        <Box minW='30vw' 
-          p="1rem"
-          backgroundColor="white"
-        >
-      <Text color='teal' fontSize='3xl'>Click Below to Create A Workout</Text>
-      {clicked ? '': 
-      <AddButton handleNew={handleNew}/>}
-        </Box>
-          </Flex> : ''
+      {Number(sessionStorage.getItem('user_id')) === 0 ? 
+        <Grid h='80vh' gap={4}> 
+          <GridItem  bg='tomato' >
+            <Center>Log In</Center>
+          </GridItem>
+        </Grid>
+        :
+        <Grid h='200px' templateRows='repeat(2, 1fr)' templateColumns='repeat(5, 1fr)' gap={4}>
+          <GridItem rowSpan={2} colSpan={1} bg='tomato' minH='80vh'>
+            <Box padding={4}>
+              <Heading>Exercises</Heading>
+              <Input placeholder='Search...' bgColor={'white'} color='teal' onChange={(e) => setSearch(e.target.value)} defaultValue={search}/>
+              <Box overflowY="auto" maxHeight="60vh">
+                <Table variant="simple" colorScheme="teal">
+                  <Thead position="sticky" top={0} bgColor="grey">
+                    <Select onChange={(e) =>  setSgroup(e.target.value)} defaultValue={sgroup}>
+                      {
+                        groups.map((item: string) => 
+                          <option value={item} >{item}</option>
+                        )
+                      }
+                    </Select>
+                  </Thead>
+                  <Tbody >
+                  { 
+                  allExercises.map((item: {name: string}, index) => 
+                  searched.map(e => e.name).indexOf(item.name) !== -1 ? 
+                    <Tr backgroundColor={selected[index] === true ? 'teal' : 'grey'} >
+                      <Td>
+                        <Text 
+                          fontSize='2xl'  
+                          draggable={selected[index] === true ? true : false} 
+                          onDrag={() => setMoving(searched[index].name)}
+                          >{item.name}
+                        </Text>
+                      </Td>
+                    </Tr> : ''
+                  )}
+                  </Tbody>
+                </Table>
+              </Box>
+                </Box>
+            </GridItem>
+            <GridItem rowSpan={2} colSpan={4} bg='tomato'  minH='80vh'>
+            <Box padding={4} overflowY={'scroll'} maxH={'80vh'}>
+              <Box bg={'red'}  w='100%' >
+              </Box>
+              <Box overflow={'scroll'} > 
+              {
+                list[0]?.name === '' ? '' : list.map((item, index) => 
+                  <Card >
+                    <Grid templateColumns='repeat(7, 1fr)' padding={10} gap={6} justifyItems={'center'} alignItems={'center'}>
+                      <Text fontSize='2xl'>{item.name}</Text>
+                      <Text>Reps</Text>
+                      <Input defaultValue={12} width={'50px'} onChange={(e) => handleReps(e, item, index)}></Input>
+                      <Text>Sets</Text>
+                      <Input defaultValue={4} width={'50px'} onChange={(e) => handleSets(e, item, index)}></Input>
+                      <Text>Confirm:   
+                        <Switch size='lg' onChange={() => handleSwitch(item, index)} isDisabled={item.status}/>
+                      </Text>
+                      <GridItem w='15%'>
+                        <Button onClick={() => moreStuff(item)}>Remove</Button>
+                      </GridItem>
+                    </Grid>
+                  </Card> 
+              )}
+              </Box>
+              {clicked ?
+                <Card minWidth='90%'>
+                  <div className='Drop' onDragOver={handleOver} onDrop={dropIt} >
+                    Add an Exercise
+                  </div>
+                </Card> 
+              : ''}
+              {newW.name === '' ?
+                <Flex flexDirection="column" width="100wh" height="80vh" bgColor='tomato' justifyContent="center" alignItems="center">
+                  <Box minW='30vw' p="1rem" backgroundColor="white">
+                    <Text color='teal' fontSize='3xl'>
+                      Click Below to Create A Workout
+                    </Text>
+                    {clicked ? '' : 
+                      <AddButton handleNew={handleNew}/>
+                    }
+                  </Box>
+                </Flex> : ''
+              }
+            </Box>
+          </GridItem>
+        </Grid>
       }
-
-  {/* /////////////////////////////////// */}
-
-        </Box>
-      </GridItem>
-    </Grid>
-}
-  </Box>
-    
+    </Box>
   );
 }
 

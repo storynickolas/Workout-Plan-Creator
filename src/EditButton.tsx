@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { FormControl, Button, UnorderedList, ListItem, FormLabel, Input, Modal, ModalOverlay, ModalContent, ModalBody, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure} from '@chakra-ui/react'
 import { useHistory } from 'react-router-dom'
+import { WorkoutContext } from './Workout.context';
+
 
 function EditButton({ item } : any) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -10,7 +12,7 @@ function EditButton({ item } : any) {
 
   const history = useHistory();
 
-  console.log(item)
+  const {myWorkouts, setMyWorkouts} = useContext(WorkoutContext)
 
   function handleSave() {
     let lizard = Number(sessionStorage.getItem('user_id'))
@@ -32,8 +34,16 @@ function EditButton({ item } : any) {
     })
       .then((response) => response.json())
       .then((response) => {
-        // dispatch(revise(response));
-        // history.push(`/mypage`);
+
+        let donkey = [...myWorkouts]
+
+        let frog = donkey.findIndex(item => item.id === response[0].id)
+
+
+        donkey[frog] = response[0]
+
+
+        setMyWorkouts([...donkey])
       })
 
     onClose()
@@ -66,8 +76,8 @@ function EditButton({ item } : any) {
             </FormControl>
             <FormLabel>Exercises</FormLabel>
             <UnorderedList>
-            {item.workout_exercises.map((ex : any) => 
-              <ListItem>{ex.exercise.name}</ListItem>
+            {item.workout_exercises.map((ex : any, index: number) => 
+              <ListItem key={ex.id+ex.exercise.name+index}>{ex.exercise.name}</ListItem>
             )}
             </UnorderedList>
           </ModalBody>
