@@ -5,12 +5,12 @@ type ContainerProps = {
 };
 
 type UserContextType = {
-  user: {id: number, schedule: {id: number}, saved_workouts: { id: number, name: string }[]},
-  setUser: React.Dispatch<React.SetStateAction<{id: number, schedule: {id: number}, saved_workouts: { id: number, name: string }[]}>>
+  user: {id: number, schedule: {id: number}, saved_workouts: { id: number, name: string, workout_id: number }[]},
+  setUser: React.Dispatch<React.SetStateAction<{id: number, schedule: {id: number}, saved_workouts: { id: number, name: string, workout_id: number }[]}>>
 }
 
 const iUserContextState = {
- user: {id: 0, schedule: {id: 0}, saved_workouts: [{id: 0, name: "test"}]},
+ user: {id: 0, schedule: {id: 0}, saved_workouts: [{id: 0, name: "test", workout_id: 0}]},
  setUser: () => {}
 }
 
@@ -19,7 +19,7 @@ const UserContext = createContext<UserContextType>(iUserContextState)
 
 const UserContextProvider = (props: ContainerProps) => {
 
-  const [user, setUser] = useState<{id: number, schedule: {id: number}, saved_workouts: { id: number, name: string }[]}>({id: 0, schedule: {id: 0}, saved_workouts: [{ id: 0, name: "test" }]})
+  const [user, setUser] = useState<{id: number, schedule: {id: number}, saved_workouts: { id: number, name: string, workout_id: number }[]}>({id: 0, schedule: {id: 0}, saved_workouts: [{ id: 0, name: "test", workout_id: 0 }]})
 
   let cow = sessionStorage.getItem('user_id')
 

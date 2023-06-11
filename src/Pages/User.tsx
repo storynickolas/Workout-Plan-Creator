@@ -4,18 +4,19 @@ import { useHistory } from 'react-router-dom'
 import { UserContext } from '../User.context';
 import { AddIcon, StarIcon, InfoOutlineIcon} from '@chakra-ui/icons'
 import AddDay from '../AddDay';
-import { IoHeartSharp } from "react-icons/io5";
+import EditButton from '../EditButton';
+import { SavedContext } from '../Saved.context';
 
 
 // import { Card, Button, CardBody, Text, SimpleGrid, UnorderedList, ListItem, Stack, Box } from '@chakra-ui/react'
 // import { AddIcon, StarIcon, InfoOutlineIcon } from '@chakra-ui/icons'
 
 function User() {
-  const [mySaved, setMySaved] = useState([])
+
   const [ww, setWw] = useState([{day: "Sunday"}, {day: "Monday"}, {day: "Tuesday"}, {day: "Wednesday"}, {day: "Thursday"}, {day: "Friday"}, {day: "Saturday"}])
   const {user, setUser} = useContext(UserContext)
 
-  const [myWorkouts, setMyWorkouts] = useState([])
+  const [myWorkouts, setMyWorkouts] = useState([{id: 0, name: 'string', time: 0, user_id: 0, workout_exercises: []}])
 
   const week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
   let myWeek = [{day: "Sunday"}, {day: "Monday"}, {day: "Tuesday"}, {day: "Wednesday"}, {day: "Thursday"}, {day: "Friday"}, {day: "Saturday"}]
@@ -24,6 +25,8 @@ function User() {
   // const { username, changeUser } = useContext(UserContext);
   const history = useHistory();
 
+  const {savedList, setSavedList, widList, setWidList, sidList, setSidList} = useContext(SavedContext);
+
   // var item_value = sessionStorage.getItem("user")
 
   function handleLogoutClick() {
@@ -31,7 +34,7 @@ function User() {
       if (r.ok) {
         console.log('Logged Out');
         // sessionStorage.setItem('user', 'Tom')
-        setUser({id: 0, schedule: {id: 0}, saved_workouts: [{ id: 0, name: "test" }]})
+        setUser({id: 0, schedule: {id: 0}, saved_workouts: [{ id: 0, name: "test", workout_id: 0 }]})
       }
     });
     history.push(`/login`);
@@ -39,41 +42,39 @@ function User() {
     sessionStorage.removeItem('user_id')
   }
 
-  function getInfo() {
-    console.log(Number(sessionStorage.getItem('user_id')))
-    console.log(user)
-    // fetch(`/users/${Number(sessionStorage.getItem('user_id'))}`).then((response) => {
-    //   if (response.ok) {
-    //     let cow : any = []
 
-    //     response.json().then((user) => 
-    //     { user[0].saved_workouts.forEach((element : any) => {
-    //       if(!cow.includes(element.workout_id)){
-    //         cow.push(element.workout_id)
-    //       }
-    //     });
-    //     // console.log(user[0].saved_workouts)
-    //       setMySaved(cow)
-    //     });
-    //   }
-    // });
-  }
+  function handleDelete(item: {id: number, name: string, time: number, user_id: number, workout_exercises: any}) {
 
-  function handleDelete(id: number) {
-    fetch(`/workouts/${id}`, { method: "DELETE" }).then((r) => {
+    fetch(`/workouts/${item.id}`, { method: "DELETE" }).then((r) => {
       if (r.ok) {
         console.log('Deleted');
+        let donkey = [...myWorkouts]
+        let frog = donkey.indexOf(item)
+        console.log([...donkey.slice(0,frog),...donkey.slice(frog +  1, donkey.length)])
+        setMyWorkouts([...donkey.slice(0,frog),...donkey.slice(frog +  1, donkey.length)])
+
+
         // sessionStorage.setItem('user', 'Tom')
 
       }
     });
   }
 
-  function handleRemove(id: number) {
-    fetch(`/saved_workouts/${id}`, { method: "DELETE" }).then((r) => {
+  function handleRemove(item: {id: number, workout: any, workout_id: number}) {
+
+
+    fetch(`/saved_workouts/${item.id}`, { method: "DELETE" }).then((r) => {
       if (r.ok) {
         console.log('Deleted');
-        // sessionStorage.setItem('user', 'Tom')
+
+        let donkey = [...savedList]
+        let otter = [...widList]
+        let tiger = [...sidList]
+        let fish = sidList.indexOf(item.id)
+
+        setSavedList([...donkey.slice(0,fish),...donkey.slice(fish + 1,savedList.length)])
+        setWidList([...otter.slice(0,fish),...otter.slice(fish + 1,widList.length)])
+        setSidList([...tiger.slice(0,fish),...tiger.slice(fish + 1,sidList.length)])
 
       }
     });
@@ -85,7 +86,8 @@ function User() {
 
   useEffect(() => {
 
-    let cow = user.id
+    // let cow = sessionStorage.getItem('user_id')
+    let cow = sessionStorage.getItem('user_id')
 
     console.log(cow)
 
@@ -150,7 +152,6 @@ function User() {
       <Box>
 
         <Button onClick={() => handleLogoutClick()}>Log Out</Button>
-        <Button onClick={() => getInfo()}>Test</Button>
 
       <Box bg='teal'>
 
@@ -178,7 +179,7 @@ function User() {
       {/* <Button onClick={() => console.log(mySaved)}>Click Me</Button> */}
        <SimpleGrid minChildWidth='300px' spacing='10px' overflowY={'scroll'} maxH={'80vh'}>
       {
-       user.id !== 0  ? user.saved_workouts.map((item: any) => 
+      savedList[0]?.workout?.name ? savedList.map((item: any) => 
                 <Card >
 
                 <CardBody>
@@ -189,20 +190,20 @@ function User() {
                     <Button leftIcon={<InfoOutlineIcon/>} onClick={() => history.push(`/workouts/${item.workout_id}`, {redirect})} colorScheme='teal' variant='solid'>
                       More Info
                     </Button>
-                    <Button onClick={() => handleRemove(item.workout.id)}>
+                    <Button onClick={() => handleRemove(item)}>
                       Remove
                       </Button>
                   </Stack>
                   </CardBody>
                  
                 </Card> 
-       ) : '' }
+       ) : '' } 
        </SimpleGrid>
        <Text fontSize={'4xl'}>My Workouts</Text>
 
        <SimpleGrid minChildWidth='300px' spacing='10px' overflowY={'scroll'} maxH={'80vh'}>
       {
-       myWorkouts.length !== 0  ? myWorkouts.map((item: any) => 
+       myWorkouts[0].name !== ''  ? myWorkouts.map((item : any) => 
                 <Card >
 
                 <CardBody>
@@ -213,8 +214,9 @@ function User() {
                     <Button leftIcon={<InfoOutlineIcon/>} onClick={() => history.push(`/workouts/${item.id}`, {redirect})} colorScheme='teal' variant='solid'>
                       More Info
                     </Button>
-                    <Button onClick={() => history.push(`/workouts/${item.id}/edit`, {item})}>Edit Workout</Button>
-                    <Button onClick={() => handleDelete(item.id)}>Delete</Button>
+                    <EditButton item={item} />
+                    {/* <Button onClick={() => history.push(`/workouts/${item.id}/edit`, {item})}>Edit Workout</Button> */}
+                    <Button onClick={() => handleDelete(item)}>Delete</Button>
                     
                   </Stack>
                   </CardBody>
@@ -222,6 +224,7 @@ function User() {
                 </Card> 
        ) : '' }
        </SimpleGrid>
+  
        
        </Box>
        

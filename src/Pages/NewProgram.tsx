@@ -119,12 +119,15 @@ function NewProgram() {
     }
 
     const puppy = results.map(e => e.exercise.name).indexOf(item.name)
-  
+
+
+    if(puppy !== -1) {
     fetch(`/workout_exercises/${results[puppy].id}`, { method: "DELETE" }).then((r) => {
       if (r.ok) {
         console.log('success');
       }
     });
+  }
     
     
     //Make Exercise Draggable Again
@@ -210,9 +213,14 @@ function NewProgram() {
 
 
   return (
+    
 
     <Box bg='grey' w='100%' h='100%' minH={'100vh'} p={4} color='white'>
-      <Button onClick={() => console.log(id)}>Click Me</Button>
+      <Box bg='tomato'>
+                  {clicked && newW.name !== '' ? <Text fontSize='6xl'>{newW.name}</Text> : ''}
+          {clicked && newW.name !== '' ? <Text fontSize='4xl'>{newW.time} minutes</Text> : ''}
+          </Box>
+      {/* <Button onClick={() => console.log(id)}>Click Me</Button> */}
       {Number(sessionStorage.getItem('user_id')) === 0 ? 
       <Grid
       h='80vh'
@@ -272,8 +280,6 @@ function NewProgram() {
 
             <Box bg={'red'}  w='100%' >
 
-                  {clicked && newW.name !== '' ? <Text fontSize='6xl'>{newW.name}</Text> : ''}
-          {clicked && newW.name !== '' ? <Text fontSize='4xl'>{newW.time} minutes</Text> : ''}
                </Box>
                 <Box overflow={'scroll'} >
               

@@ -21,7 +21,6 @@ function Workout( ) {
   interface dataType {
     redirect: {path: string}
   }
-  // [ {id: number, exercise: {name: string, id: number}, sets: number, reps: number}]
   
   let data : dataType = history.location.state as {redirect: {path: '' }}
 

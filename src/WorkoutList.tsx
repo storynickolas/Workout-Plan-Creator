@@ -4,20 +4,25 @@ import { AddIcon, StarIcon, InfoOutlineIcon } from '@chakra-ui/icons'
 import { useHistory } from 'react-router-dom'
 import { WorkoutContext } from './Workout.context';
 import { useContext } from 'react';
+import { UserContext } from './User.context';
 
-import { IoHeartOutline } from "react-icons/io5";
+import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
+import { SavedContext } from './Saved.context';
 
 function WorkoutLists( { newLength } : {newLength : number } ) {
 
   const {workoutList, setWorkoutList} = useContext(WorkoutContext);
+
+  const {savedList, setSavedList, widList, setWidList, sidList, setSidList} = useContext(SavedContext);
+
+  const {user, setUser} = useContext(UserContext)
   
   const history = useHistory();
 
   function saveWorkout(workout: number) {
-    const user = sessionStorage.getItem("user_id")
     let savedWorkout = {
       workout_id: workout,
-      user_id: Number(user)
+      user_id: Number(user.id)
     }
 
     fetch(`/saved_workouts`, {
@@ -35,12 +40,37 @@ function WorkoutLists( { newLength } : {newLength : number } ) {
           console.log(response.errors)
         }
         else {
-          console.log(response)
+          let donkey = [...savedList]
+          let otter = [...widList]
+          let tiger = [...sidList]
+          donkey.push(response)
+          otter.push(response.workout.id)
+          tiger.push(response.id)
+          setSavedList([...donkey])
+          setWidList([...otter])
+          setSidList([...tiger])
         }
       })
+    }
 
+    function handleRemove(sid : number, id: number) {
+      let cow = sidList[sid]
+  
+      if(cow) {
+        fetch(`/saved_workouts/${cow}`, { method: "DELETE" }).then((r) => {
+                if (r.ok) {
+                  console.log('success')
+                  let donkey = [...savedList]
+                  let otter = [...widList]
+                  let tiger = [...sidList]
+                  setSavedList([...donkey.slice(0,sid),...donkey.slice(sid + 1,savedList.length)])
+                  setWidList([...otter.slice(0,sid),...otter.slice(sid + 1,widList.length)])
+                  setSidList([...tiger.slice(0,sid),...tiger.slice(sid + 1,sidList.length)])
+                }
+          })
+      }
       
-  }
+    }
 
   let pagination
 
@@ -54,6 +84,8 @@ function WorkoutLists( { newLength } : {newLength : number } ) {
   interface workoutType {
     id: number, name: string, time: number, user_id: number, workout_exercises: {name: string}[], reviews: {rating: number}[]
   }
+
+  console.log(workoutList)
 
   return (
     <SimpleGrid minChildWidth='300px' spacing='10px' overflowY={'scroll'} maxH={'80vh'}>
@@ -79,9 +111,23 @@ function WorkoutLists( { newLength } : {newLength : number } ) {
                 <Button leftIcon={<InfoOutlineIcon/>} onClick={() => history.push(`/workouts/${item.id}`)} colorScheme='teal' variant='solid'>
                   More Info
                 </Button>
+                
+                { widList.includes(item.id) ?
+                  <Button rightIcon={<IoHeartSharp />} colorScheme='teal' variant='outline' 
+                    onClick={() => {
+                    let cow = widList.indexOf(item.id)
+                    console.log('Mario!!')
+                    console.log(cow)
+                    console.log('Luigi')
+                     handleRemove(cow, item.id)}
+                    }>
+                  Saved
+                </Button>
+                :
                 <Button rightIcon={<IoHeartOutline />} colorScheme='teal' variant='outline' onClick={() => saveWorkout(item.id)}>
                   Save Workout
                 </Button>
+}
               </Stack>
               </CardBody>
             </Card>
