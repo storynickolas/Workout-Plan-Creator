@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { FormControl, Button, FormLabel, Input, Modal, ModalOverlay, ModalContent, ModalBody, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure} from '@chakra-ui/react'
+import { WorkoutContext } from './Workout.context';
+
 
 function AddButton({ handleNew } : {handleNew : (response: {id: number, name: string, time: number, user_id: number}) => void}) {
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const {workoutList, setWorkoutList} = useContext(WorkoutContext);
 
   const [workout, setWorkout] = useState('')
   const [time, setTime] = useState('')
@@ -32,10 +36,10 @@ function AddButton({ handleNew } : {handleNew : (response: {id: number, name: st
           console.log(response.errors)
         }
         else {
-          // setStatus(['Successfully Added'])
-          // dispatch(addBeer(response));
-          console.log(cow)
-          console.log(response)
+
+          let tiger = [...workoutList]
+          tiger.push(response)
+          setWorkoutList([...tiger])
           handleNew(response)
 
         }

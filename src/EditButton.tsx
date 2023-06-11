@@ -75,17 +75,19 @@ function EditButton({ item } : any) {
               <Input defaultValue={item.time} onChange={(e) => setTime(e.target.value)}/>
             </FormControl>
             <FormLabel>Exercises</FormLabel>
+           
             <UnorderedList>
             {item.workout_exercises.map((ex : any, index: number) => 
               <ListItem key={ex.id+ex.exercise.name+index}>{ex.exercise.name}</ListItem>
             )}
             </UnorderedList>
+             <Button colorScheme='blue' mr={3} onClick={() => history.push(`/workouts/${item.id}/edit`, {item})}>
+              Edit Exercises
+            </Button>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={() => history.push(`/workouts/${item.id}/edit`, {item})}>
-              Edit Exercises
-            </Button>
+      
             <Button colorScheme='blue' mr={3} onClick={handleSave}>
               Save
             </Button>

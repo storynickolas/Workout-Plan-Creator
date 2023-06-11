@@ -5,6 +5,7 @@ import AddButton from '../AddButton';
 import { ExerciseContext } from '../Exercise.context';
 import { useHistory } from 'react-router-dom'
 import { useParams } from 'react-router-dom';
+import { WorkoutContext } from '../Workout.context';
 
 
 
@@ -14,6 +15,8 @@ function NewProgram() {
 
   ///////////////////////////////// newW = workout
   const history = useHistory();
+
+  const {workoutList, setWorkoutList} = useContext(WorkoutContext)
 
   interface dataType {
     item: {id: number, name: string, time: number, user_id: number, workout_exercises: any[]}
@@ -45,7 +48,6 @@ function NewProgram() {
 
   const [moving, setMoving] = useState('')
   const [list, setList] = useState([{name: '',exercise_id: 0, workout_id: 0, reps: 0, sets: 0, status: false, user_id: 0}])
-  const [results, setResults] = useState([{id: 0, exercise: {name: ''}}])
 
   function handleOver(e: React.ChangeEvent<any>) {
     e.preventDefault()
@@ -85,7 +87,7 @@ function NewProgram() {
       let dog = data.item.user_id
 
       interface cowType {
-        name: string, exercise_id: number, workout_id: number, reps: number, sets: number, status: boolean, user_id: number
+        id: number, name: string, exercise_id: number, workout_id: number, reps: number, sets: number, status: boolean, user_id: number
       };
     
     let cow : cowType[] = [];
@@ -96,7 +98,7 @@ function NewProgram() {
 
     if(data?.item?.workout_exercises[0]?.exercise?.id !== 0){
         data.item.workout_exercises.forEach((item) => {
-        cow.push({name: item.exercise.name, exercise_id: item.exercise.id, workout_id: item.id, reps: item.reps, sets: item.reps, status: true, user_id: dog})
+        cow.push({id: item.id, name: item.exercise.name, exercise_id: item.exercise.id, workout_id: data.item.id, reps: item.reps, sets: item.reps, status: true, user_id: dog})
       })
     }
 
@@ -107,26 +109,73 @@ function NewProgram() {
       
   
     }, [data]);
+    
 
   function moreStuff(item: any) {
     //Remove Exercise from Workout]
+    console.log(item)
     if(list.length === 1){
       setList([{name: '',exercise_id: 0, workout_id: 0, reps: 0, sets: 0, status: false, user_id: 0}])
     }
     else{
       let newList = [...list]
-    let cattle = newList.indexOf(item)
-    newList.splice(cattle, 1)
-    setList(newList)
+      let cattle = newList.indexOf(item)
+      newList.splice(cattle, 1)
+      setList(newList)
     }
 
-    const puppy = results.map(e => e.exercise.name).indexOf(item.name)
 
-
-    if(puppy !== -1) {
-    fetch(`/workout_exercises/${results[puppy].id}`, { method: "DELETE" }).then((r) => {
+    if(item.id) {
+    fetch(`/workout_exercises/${item.id}`, { method: "DELETE" }).then((r) => {
       if (r.ok) {
-        console.log('success');
+      console.log('start');
+
+        /// Find index of workout on myWorkout List
+       
+        let bat : number[] = []
+
+        workoutList.forEach((item) => {
+          if(item.name === newW.name) {
+            bat.push(workoutList.indexOf(item))
+      
+          }
+        })
+        console.log('start')
+
+        /// Workout in quesiton
+
+        let fly = workoutList[bat[0]]
+
+        /// workout exercises of workout
+        
+        let cow = fly.workout_exercises
+
+        /// find index of workout exercise
+
+        let possum : number[] = []
+
+        cow.forEach((ex, index) => {
+          if(ex.id === item.id){
+            possum.push(index)
+          }
+        })
+
+        /// remove index from workout exercises
+
+        cow = [...cow.slice(0, possum[0]), ...cow.slice(possum[0] + 1, cow.length)]
+
+        fly.workout_exercises = [...cow]
+
+        /// Add updated workout back into list
+
+        let turtle = [...workoutList]
+
+        turtle[bat[0]] = fly
+
+        setWorkoutList([...turtle])
+    
+        console.log('end');
+
       }
     });
   }
@@ -140,22 +189,103 @@ function NewProgram() {
   }
 
   function handleSwitch(donkey: any, cow: number) {
+    console.log(donkey)
     let newList = [...list]
     let newitem = donkey
     newitem.status = true
     newList[cow] = newitem
     setList([...newList])
 
-    let dog = {
+ let dog = {
       exercise_id: donkey.exercise_id,
       workout_id: donkey.workout_id,
       reps: donkey.reps,
       sets: donkey.sets, 
 
     }
-    console.log(dog)
-    console.log(cow)
-    fetch(`/workout_exercises`, {
+
+    if(donkey.id) {
+      fetch(`/workout_exercises/${donkey.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify(dog),
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if(response.errors){
+            console.log(response.errors)
+          }
+          else {
+            console.log('success')
+
+                    /// Find index of workout on myWorkout List
+       
+        let bat : number[] = []
+
+        workoutList.forEach((item) => {
+          if(item.name === newW.name) {
+            bat.push(workoutList.indexOf(item))
+      
+          }
+        })
+
+        console.log('start')
+
+        /// Workout in quesiton
+
+        let fly = workoutList[bat[0]]
+
+        /// workout exercises of workout
+        
+        let cow = fly.workout_exercises
+
+        /// find index of workout exercise
+
+        let possum : number[] = []
+
+        cow.forEach((ex, index) => {
+          console.log(ex)
+          if(ex.id === response[0].id){
+            console.log(ex)
+            possum.push(index)
+          }
+        })
+
+        /// remove index from workout exercises
+
+        console.log(possum[0])
+
+        console.log(response)
+
+        cow = [...cow.slice(0, possum[0]), response[0], ...cow.slice(possum[0] + 1, cow.length)]
+
+        fly.workout_exercises = [...cow]
+
+        /// Add updated workout back into list
+
+        let turtle = [...workoutList]
+
+        turtle[bat[0]] = fly
+
+        console.log([...turtle])
+
+        setWorkoutList([...turtle])
+    
+        console.log('end');
+      
+
+
+
+
+          }
+        })
+
+    }
+    else {
+      fetch(`/workout_exercises`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -166,23 +296,47 @@ function NewProgram() {
       .then((response) => response.json())
       .then((response) => {
         if(response.errors){
-          // setStatus(response.errors)
           console.log(response.errors)
         }
         else {
-          // setStatus(['Successfully Added'])
-          // dispatch(addBeer(response));
-          let squirel = [...results]
-          if(squirel.length === 1){
-            setResults([response])
-          }
-          else{
-            squirel.push(response)
-     
-          setResults([...squirel])
-          }
+          console.log(response)
+
+          let bat : number[] = []
+
+          workoutList.forEach((item) => {
+            if(item.name === newW.name) {
+              bat.push(workoutList.indexOf(item))
+        
+            }
+          })
+
+          console.log('start')
+
+          /// Workout in quesiton
+  
+          let fly = workoutList[bat[0]]
+  
+          /// workout exercises of workout
+          
+          let cow = fly.workout_exercises
+
+          cow.push(response)
+  
+          fly.workout_exercises = [...cow]
+  
+          /// Add updated workout back into list
+  
+          let turtle = [...workoutList]
+  
+          turtle[bat[0]] = fly
+  
+          setWorkoutList([...turtle])
+      
+          console.log('end');
+
         }
       })
+    }    
   }
 
   function handleReps(e: React.ChangeEvent<any>, donkey: any, cow: number) {
@@ -212,6 +366,45 @@ function NewProgram() {
 
   }, []);
 
+  function enableEdit(item: any) {
+    console.log(item)
+    let tiger = [...list]
+    let cow = tiger.indexOf(item)
+    tiger[cow].status = false
+    setList([...tiger])
+  }
+
+  useEffect(() => {
+
+
+    console.log(selected)
+    let manta = [...selected]
+    console.log(searched)
+    console.log(list)
+    console.log(allExercises)
+
+    let tiger = [...allExercises]
+    let ray : number[] = []
+
+    list.forEach((ex) => {
+      ray.push(tiger.findIndex(item => item.name === ex.name))
+    })
+    
+    console.log(ray)
+
+    manta.forEach((ex, index) => {
+      if(ray.includes(index)){
+        manta[index] = false
+      }
+      else{
+        manta[index] = true
+      }
+    })
+
+    setSelected([...manta])
+
+  }, [data, list])
+
 
 
   return (
@@ -225,7 +418,7 @@ function NewProgram() {
 
 
       </Box>
-      
+
       <Button onClick={() => console.log(newW)}>Click Me</Button>
       <Button onClick={() => console.log(clicked)}>Click Me</Button>
 
@@ -280,6 +473,7 @@ function NewProgram() {
               {
                 list[0]?.name === '' ? '' : list.map((item, index) => 
                   <Card >
+                    {item.status === false ?
                     <Grid templateColumns='repeat(7, 1fr)' padding={10} gap={6} justifyItems={'center'} alignItems={'center'}>
                       <Text fontSize='2xl'>{item.name}</Text>
                       <Text>Reps</Text>
@@ -287,12 +481,25 @@ function NewProgram() {
                       <Text>Sets</Text>
                       <Input defaultValue={4} width={'50px'} onChange={(e) => handleSets(e, item, index)}></Input>
                       <Text>Confirm:   
-                        <Switch size='lg' onChange={() => handleSwitch(item, index)} isDisabled={item.status}/>
-                      </Text>
+                      <Switch size='lg' onChange={() => handleSwitch(item, index)} isDisabled={item.status}/>
+                      </Text> 
                       <GridItem w='15%'>
-                        <Button onClick={() => moreStuff(item)}>Remove</Button>
+                      <Button onClick={() => moreStuff(item)}>Remove</Button> 
                       </GridItem>
-                    </Grid>
+                    </Grid> 
+                    : 
+                    <Grid templateColumns='repeat(7, 1fr)' padding={10} gap={6} justifyItems={'center'} alignItems={'center'}>
+                      <Text fontSize='2xl'>{item.name}</Text>
+                      <Text>Reps</Text>
+                      <Text>{item.reps}</Text>
+                      <Text>Sets</Text>
+                      <Text>{item.sets}</Text>
+                      <Button onClick={() => enableEdit(item)}>Edit</Button>
+                      <GridItem w='15%'>
+                      <Button onClick={() => moreStuff(item)}>Remove</Button> 
+                      </GridItem>
+                    </Grid> 
+                    }
                   </Card> 
               )}
               </Box>

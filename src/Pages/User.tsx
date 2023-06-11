@@ -14,7 +14,7 @@ function User() {
   const [ww, setWw] = useState([{day: "Sunday"}, {day: "Monday"}, {day: "Tuesday"}, {day: "Wednesday"}, {day: "Thursday"}, {day: "Friday"}, {day: "Saturday"}])
   const {user, setUser} = useContext(UserContext)
 
-  const {myWorkouts, setMyWorkouts} = useContext(WorkoutContext)
+  const {workoutList, setWorkoutList, myWorkouts, setMyWorkouts} = useContext(WorkoutContext)
 
 
   const week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -42,15 +42,25 @@ function User() {
   }
 
 
-  function handleDelete(item: {id: number, name: string, time: number, user_id: number, workout_exercises: [{name: string}], reviews: [{rating: number}]}) {
+  function handleDelete(item: {id: number, name: string, time: number, user_id: number, workout_exercises: [{id: number, name: string}], reviews: [{rating: number}]}) {
 
     fetch(`/workouts/${item.id}`, { method: "DELETE" }).then((r) => {
       if (r.ok) {
         console.log('Deleted');
         let donkey = [...myWorkouts]
         let frog = donkey.indexOf(item)
+        let dragon = [...workoutList]
+        console.log(dragon)
 
+        // let unicorn = dragon.indexOf(item)
+
+        let unicorn = dragon.findIndex(x => x.name === item.name)
+
+
+      
         setMyWorkouts([...donkey.slice(0,frog),...donkey.slice(frog +  1, donkey.length)])
+
+        setWorkoutList([...dragon.slice(0,unicorn),...dragon.slice(unicorn +  1, dragon.length)])
 
       }
     });
@@ -165,7 +175,7 @@ function User() {
             My Workouts
           </Text>
           <SimpleGrid minChildWidth='300px' spacing='10px' overflowY={'scroll'} maxH={'80vh'}>
-            {myWorkouts[0].name !== ''  ? myWorkouts.map((item : any) => 
+            {myWorkouts[0]?.name !== ''  ? myWorkouts.map((item : any) => 
               <Card >
                 <CardBody>
                   <Text fontSize='2xl'>

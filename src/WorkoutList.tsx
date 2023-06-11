@@ -101,7 +101,7 @@ function WorkoutLists( { newLength } : {newLength : number } ) {
                 <StarIcon w={5} h={5} color='gold' key={index}/>
               )) : '' }
               <UnorderedList>{
-                item.workout_exercises[0]?.name !== '' ? item.workout_exercises.map((info: any, index) => 
+                item?.workout_exercises[0]?.name !== '' ? item.workout_exercises.map((info: any, index) => 
                   <ListItem fontSize='md' textAlign='left' key={info.exercise.name + index}>
                     {info.exercise.name} {info.sets}x{info.reps}
                   </ListItem>) : ''}

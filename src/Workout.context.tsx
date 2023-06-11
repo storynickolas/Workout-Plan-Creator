@@ -7,17 +7,17 @@ type ContainerProps = {
 };
 
 type WorkoutContextType = {
-  workoutList: {id: number, name: string, time: number, user_id: number, workout_exercises: {name: string}[], reviews: {rating: number}[]}[],
-  setWorkoutList: React.Dispatch<React.SetStateAction<{id: number, name: string, time: number, user_id: number, workout_exercises: {name: string}[], reviews: {rating: number}[]}[]>>
-  myWorkouts: {id: number, name: string, time: number, user_id: number, workout_exercises: {name: string}[], reviews: {rating: number}[]}[],
-  setMyWorkouts: React.Dispatch<React.SetStateAction<{id: number, name: string, time: number, user_id: number, workout_exercises: {name: string}[], reviews: {rating: number}[]}[]>>
+  workoutList: {id: number, name: string, time: number, user_id: number, workout_exercises: {id: number, name: string}[], reviews: {rating: number}[]}[],
+  setWorkoutList: React.Dispatch<React.SetStateAction<{id: number, name: string, time: number, user_id: number, workout_exercises: {id: number, name: string}[], reviews: {rating: number}[]}[]>>
+  myWorkouts: {id: number, name: string, time: number, user_id: number, workout_exercises: {id: number, name: string}[], reviews: {rating: number}[]}[],
+  setMyWorkouts: React.Dispatch<React.SetStateAction<{id: number, name: string, time: number, user_id: number, workout_exercises: {id: number, name: string}[], reviews: {rating: number}[]}[]>>
 
 }
 
 const WorkoutContextState = {
-  workoutList: [{id: 0, name: '', time: 0, user_id: 0, workout_exercises: [{name: ''}], reviews: [{rating: 0}]}],
+  workoutList: [{id: 0, name: '', time: 0, user_id: 0, workout_exercises: [{id: 0, name: ''}], reviews: [{rating: 0}]}],
   setWorkoutList: () => [],
-  myWorkouts: [{id: 0, name: '', time: 0, user_id: 0, workout_exercises: [{name: ''}], reviews: [{rating: 0}]}],
+  myWorkouts: [{id: 0, name: '', time: 0, user_id: 0, workout_exercises: [{id: 0, name: ''}], reviews: [{rating: 0}]}],
   setMyWorkouts: () => []
 }
 
@@ -26,8 +26,8 @@ const WorkoutContext = createContext<WorkoutContextType>(WorkoutContextState)
 
 const WorkoutContextProvider = (props: ContainerProps) => {
 
-  const [workoutList, setWorkoutList] = useState<{id: number, name: string, time: number, user_id: number, workout_exercises: {name: string}[], reviews: {rating: number}[]}[]>([{id: 0, name: '', time: 0, user_id: 0, workout_exercises: [{name: ''}], reviews: [{rating: 0}]}])
-  const [myWorkouts, setMyWorkouts] = useState<{id: number, name: string, time: number, user_id: number, workout_exercises: {name: string}[], reviews: {rating: number}[]}[]>([{id: 0, name: '', time: 0, user_id: 0, workout_exercises: [{name: ''}], reviews: [{rating: 0}]}])
+  const [workoutList, setWorkoutList] = useState<{id: number, name: string, time: number, user_id: number, workout_exercises: {id: number, name: string}[], reviews: {rating: number}[]}[]>([{id: 0, name: '', time: 0, user_id: 0, workout_exercises: [{id: 0, name: ''}], reviews: [{rating: 0}]}])
+  const [myWorkouts, setMyWorkouts] = useState<{id: number, name: string, time: number, user_id: number, workout_exercises: {id: number, name: string}[], reviews: {rating: number}[]}[]>([{id: 0, name: '', time: 0, user_id: 0, workout_exercises: [{id: 0, name: ''}], reviews: [{rating: 0}]}])
 
   let cow = Number(sessionStorage.getItem('user_id'))
 
@@ -52,6 +52,20 @@ const WorkoutContextProvider = (props: ContainerProps) => {
 
 
   }, []);
+
+  useEffect(() => {
+    let mine : any[] = []
+    workoutList.forEach((item) => {
+      if(item.user_id === cow){
+        console.log('checking')
+        mine.push(item)
+      }
+    })
+
+    setMyWorkouts([...mine])
+
+
+  }, [workoutList]);
 
   return (
 
