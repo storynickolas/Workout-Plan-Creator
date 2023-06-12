@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { FormControl, Button, UnorderedList, ListItem, FormLabel, Input, Modal, ModalOverlay, ModalContent, ModalBody, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure} from '@chakra-ui/react'
 import { useHistory } from 'react-router-dom'
-import { WorkoutContext } from './Workout.context';
+import { WorkoutContext } from '../Context/Workout.context';
 
 
 function EditButton({ item } : any) {

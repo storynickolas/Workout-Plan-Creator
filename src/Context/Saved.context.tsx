@@ -12,7 +12,9 @@ type SavedContextType = {
   widList: number[],
   setWidList: React.Dispatch<React.SetStateAction<number[]>>
   sidList: number[],
-  setSidList: React.Dispatch<React.SetStateAction<number[]>>
+  setSidList: React.Dispatch<React.SetStateAction<number[]>>,
+  handleRemove: Function,
+  saveWorkout: Function
 }
 
 const SavedContextState = {
@@ -21,7 +23,9 @@ const SavedContextState = {
   widList: [],
   setWidList: () => [],
   sidList: [],
-  setSidList: () => []
+  setSidList: () => [],
+  handleRemove: () => [],
+  saveWorkout: () => []
 }
 
 const SavedContext = createContext<SavedContextType>(SavedContextState)
@@ -55,10 +59,65 @@ const SavedContextProvider = (props: ContainerProps) => {
     });
   }, [cow]);
 
+  function handleRemove(sid : number) {
+    let cow = sidList[sid]
+
+    if(cow) {
+      fetch(`/saved_workouts/${cow}`, { method: "DELETE" }).then((r) => {
+              if (r.ok) {
+                console.log('success')
+                let donkey = [...savedList]
+                let otter = [...widList]
+                let tiger = [...sidList]
+                setSavedList([...donkey.slice(0,sid),...donkey.slice(sid + 1,savedList.length)])
+                setWidList([...otter.slice(0,sid),...otter.slice(sid + 1,widList.length)])
+                setSidList([...tiger.slice(0,sid),...tiger.slice(sid + 1,sidList.length)])
+              }
+        })
+    }
+  }
+
+  function saveWorkout(workout: number) {
+    if(cow !== null) {
+      let savedWorkout = {
+      workout_id: workout,
+      user_id: Number(cow)
+      }
+       fetch(`/saved_workouts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: JSON.stringify(savedWorkout),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if(response.errors){
+
+          console.log(response.errors)
+        }
+        else {
+          let donkey = [...savedList]
+          let otter = [...widList]
+          let tiger = [...sidList]
+          donkey.push(response)
+          otter.push(response.workout.id)
+          tiger.push(response.id)
+          setSavedList([...donkey])
+          setWidList([...otter])
+          setSidList([...tiger])
+        }
+      })
+    }
+   
+    }
+
+
 
   return (
 
-    <SavedContext.Provider value={{savedList, setSavedList, widList, setWidList, sidList, setSidList}}>
+    <SavedContext.Provider value={{handleRemove, saveWorkout, savedList, setSavedList, widList, setWidList, sidList, setSidList}}>
       {props.children}
     </SavedContext.Provider>
   );

@@ -1,11 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Button, Input, Card, Text, Switch, Box, Center, Flex, Table, Thead, Tr, Td, Tbody, Heading, Select, Grid, GridItem} from '@chakra-ui/react'
-import AddButton from '../AddButton';
+import AddButton from '../Components/AddButton';
 
-import { ExerciseContext } from '../Exercise.context';
+import { ExerciseContext } from '../Context/Exercise.context';
 import { useHistory } from 'react-router-dom'
 import { useParams } from 'react-router-dom';
-import { WorkoutContext } from '../Workout.context';
+import { WorkoutContext } from '../Context/Workout.context';
 
 
 
@@ -410,8 +410,8 @@ function NewProgram() {
   return (
     
 
-    <Box bg='grey' w='100%' h='100%' minH={'100vh'} p={4} color='white'>
-      <Box bg='tomato'>
+    <Box bg='grey' w='100%' h='100%' minH={'85vh'} p={4} color='white'>
+      <Box bg='teal' >
 
         {clicked && newW.name !== '' ? <Text fontSize='6xl'>{newW.name}</Text> : ''}
         {clicked && newW.name !== '' ? <Text fontSize='4xl'>{newW.time} minutes</Text> : ''}
@@ -419,25 +419,22 @@ function NewProgram() {
 
       </Box>
 
-      <Button onClick={() => console.log(newW)}>Click Me</Button>
-      <Button onClick={() => console.log(clicked)}>Click Me</Button>
-
       {Number(sessionStorage.getItem('user_id')) === 0 ? 
         <Grid h='80vh' gap={4}> 
-          <GridItem  bg='tomato' >
+          <GridItem  bg='teal' >
             <Center>Log In</Center>
           </GridItem>
         </Grid>
         :
         <Grid h='200px' templateRows='repeat(2, 1fr)' templateColumns='repeat(5, 1fr)' gap={4}>
-          <GridItem rowSpan={2} colSpan={1} bg='tomato' minH='80vh'>
-            <Box padding={4}>
+          <GridItem rowSpan={2} colSpan={1} bg='teal' maxH='80vh' >
+            <Box padding={4} >
               <Heading>Exercises</Heading>
-              <Input placeholder='Search...' bgColor={'white'} color='teal' onChange={(e) => setSearch(e.target.value)} defaultValue={search}/>
+              <Input placeholder='Search...' bgColor={'white'} color='black' onChange={(e) => setSearch(e.target.value)} defaultValue={search}/>
               <Box overflowY="auto" maxHeight="60vh">
                 <Table variant="simple" colorScheme="teal">
                   <Thead position="sticky" top={0} bgColor="grey">
-                    <Select onChange={(e) =>  setSgroup(e.target.value)} defaultValue={sgroup}>
+                    <Select onChange={(e) =>  setSgroup(e.target.value)} defaultValue={sgroup} >
                       {
                         groups.map((item: string) => 
                           <option value={item} >{item}</option>
@@ -449,7 +446,7 @@ function NewProgram() {
                   { 
                   allExercises.map((item: {name: string}, index) => 
                   searched.map(e => e.name).indexOf(item.name) !== -1 ? 
-                    <Tr backgroundColor={selected[index] === true ? 'teal' : 'grey'} >
+                    <Tr color='black' backgroundColor={selected[index] === true ? 'white' : 'grey'} >
                       <Td>
                         <Text 
                           fontSize='2xl'  
@@ -465,7 +462,7 @@ function NewProgram() {
               </Box>
                 </Box>
             </GridItem>
-            <GridItem rowSpan={2} colSpan={4} bg='tomato'  minH='80vh'>
+            <GridItem rowSpan={2} colSpan={4} bg='teal'  minH='80vh'>
             <Box padding={4} overflowY={'scroll'} maxH={'80vh'}>
               <Box bg={'red'}  w='100%' >
               </Box>
@@ -511,13 +508,13 @@ function NewProgram() {
                 </Card> 
               : ''}
               {newW.name === '' ?
-                <Flex flexDirection="column" width="100wh" height="80vh" bgColor='tomato' justifyContent="center" alignItems="center">
-                  <Box minW='30vw' p="1rem" backgroundColor="white">
-                    <Text color='teal' fontSize='3xl'>
+                <Flex flexDirection="column" width="100wh" height="80vh" bgColor='teal' justifyContent="center" alignItems="center">
+                  <Box minW='30vw' p="1rem" backgroundColor="white" border='2px' borderColor='black'>
+                    <Text color='black' fontSize='3xl'>
                       Click Below to Create A Workout
                     </Text>
                     {clicked ? '' : 
-                      <AddButton handleNew={handleNew}/>
+                      <AddButton handleNew={handleNew} />
                     }
                   </Box>
                 </Flex> : ''

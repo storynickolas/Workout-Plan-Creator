@@ -1,13 +1,13 @@
 import { Text, Box } from '@chakra-ui/react'
-import WorkoutLists from "../WorkoutList"
+import WorkoutLists from "../Components/WorkoutList"
 
 function Workouts( ) {
 
   let newLength = 0
 
   return (
-    <Box bg='grey' h='100%' minH='100vh' w='100%'>
-      <Text color='white' fontSize='6xl'>All Workouts</Text>
+    <Box bg='grey'  w='100%' position='inherit'>
+        <Text color='white' as="u" fontSize='5xl' >All Workouts</Text>
       <WorkoutLists newLength={newLength} ></WorkoutLists>
     </Box>
   );

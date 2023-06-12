@@ -18,7 +18,7 @@ import {
 
 import weights from '../Weights.jpg';
 import { useHistory } from 'react-router-dom'
-import { UserContext } from '../User.context';
+import { UserContext } from '../Context/User.context';
 
 
 
@@ -50,10 +50,10 @@ const Login = () => {
           console.log(user)
           console.log(value)
           if(value.schedule !== null) {
-            setUser({id: value.id, schedule: {id: value.schedule.id}, saved_workouts: value.saved_workouts})
+            setUser({id: value.id, username: value.username, schedule: {id: value.schedule.id}, saved_workouts: value.saved_workouts})
           }
           else{
-            setUser({id: value.id, schedule: {id: 0}, saved_workouts: value.saved_workouts})
+            setUser({id: value.id, username: value.username, schedule: {id: 0}, saved_workouts: value.saved_workouts})
           }
           
           sessionStorage.setItem('user_id', value.id)

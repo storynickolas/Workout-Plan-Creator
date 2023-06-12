@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { FormControl, Button, FormLabel, Input, Modal, ModalOverlay, ModalContent, ModalBody, ModalHeader, ModalCloseButton, ModalFooter, useDisclosure} from '@chakra-ui/react'
-import { WorkoutContext } from './Workout.context';
+import { WorkoutContext } from '../Context/Workout.context';
 
 
 function AddButton({ handleNew } : {handleNew : (response: {id: number, name: string, time: number, user_id: number}) => void}) {
@@ -52,7 +52,7 @@ function AddButton({ handleNew } : {handleNew : (response: {id: number, name: st
   return (
     <>
 
-      <Button onClick={onOpen}>Add a Workout</Button>
+      <Button onClick={onOpen} color='black'>Add a Workout</Button>
 
       <Modal
         isOpen={isOpen}

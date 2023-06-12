@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Card, Button, CardBody, Text, Stack, SimpleGrid, ListItem, Box, TableContainer, Tr, Td, Table, VStack } from '@chakra-ui/react'
+import { Card, Button, CardBody, Text, Stack, SimpleGrid, Divider, Box, TableContainer, Tr, Td, Table, VStack } from '@chakra-ui/react'
 import { useHistory } from 'react-router-dom'
-import { UserContext } from '../User.context';
+import { UserContext } from '../Context/User.context';
 import { AddIcon, StarIcon, InfoOutlineIcon} from '@chakra-ui/icons'
-import AddDay from '../AddDay';
-import EditButton from '../EditButton';
-import { SavedContext } from '../Saved.context';
-import { WorkoutContext } from '../Workout.context';
+import AddDay from '../Components/AddDay';
+import EditButton from '../Components/EditButton';
+import { SavedContext } from '../Context/Saved.context';
+import { WorkoutContext } from '../Context/Workout.context';
 
 
 function User() {
@@ -33,7 +33,7 @@ function User() {
       if (r.ok) {
         console.log('Logged Out');
         // sessionStorage.setItem('user', 'Tom')
-        setUser({id: 0, schedule: {id: 0}, saved_workouts: [{ id: 0, name: "test", workout_id: 0 }]})
+        setUser({id: 0, username: '', schedule: {id: 0}, saved_workouts: [{ id: 0, name: "test", workout_id: 0 }]})
       }
     });
     history.push(`/login`);
@@ -109,14 +109,20 @@ function User() {
   }, []);
 
   return (
-    <Box bg='grey' w='100%' h='100vh' p={4} color='white'>
+    <Box bg='grey' w='100%' maxH='85vh' p={4} color='white' position='inherit' overflowY={'scroll'} >
       {Number(sessionStorage.getItem('user_id')) !== 0 ?
         <Box>
-          <Button onClick={() => handleLogoutClick()}>
+          <Box w='100%' bg='grey' paddingBottom='2%'>
+            <Text fontSize='4xl'>Welcome Back {user.username}</Text>
+
+          <Button onClick={() => handleLogoutClick()} color='black'>
             Log Out
           </Button>
-          <Box bg='teal'>
-            <Text fontSize={'6xl'}>
+          <Divider orientation='horizontal' />
+
+          </Box>
+          <Box bg='white' color='black'>
+            <Text fontSize={'6xl'} bg='teal' color='white'>
               My Weekly Schedule
             </Text>
             <TableContainer>
@@ -146,7 +152,7 @@ function User() {
               </Table>
             </TableContainer>
           </Box>
-          <Text fontSize={'4xl'}>
+          <Text fontSize={'4xl'} as='u'>
             Saved Workouts
           </Text>
           <SimpleGrid minChildWidth='300px' spacing='10px' overflowY={'scroll'} maxH={'80vh'}>
@@ -171,7 +177,7 @@ function User() {
               </Card> 
             ) : '' } 
           </SimpleGrid>
-          <Text fontSize={'4xl'}>
+          <Text fontSize={'4xl'} as='u'>
             My Workouts
           </Text>
           <SimpleGrid minChildWidth='300px' spacing='10px' overflowY={'scroll'} maxH={'80vh'}>

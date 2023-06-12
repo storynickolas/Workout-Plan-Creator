@@ -19,7 +19,7 @@ import {
 
 import weights from '../Weights.jpg';
 import { useHistory } from 'react-router-dom'
-import { UserContext } from '../User.context';
+import { UserContext } from '../Context/User.context';
 import { useParams } from 'react-router-dom';
 
 

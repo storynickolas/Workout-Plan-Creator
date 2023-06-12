@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { Card, Button, CardBody, Text, SimpleGrid, AspectRatio, Box, Center, Input, Flex } from '@chakra-ui/react'
-import { ExerciseContext } from '../Exercise.context';
+import { ExerciseContext } from '../Context/Exercise.context';
 
 function Exercises() {
 
@@ -27,19 +27,21 @@ function Exercises() {
   //////////////////////////////////////
 
   return (
-    <Box bg='grey' w='100%' h='100%' minH='100vh' p={4} color='white'>
-        <Text color='white' fontSize='6xl'>Exercises</Text>
+    <Box bg='black' w='100%' position='inherit'>
+      <Text color='white' fontSize='5xl' as='u'>Exercises</Text>
+    <Box bg='black' w='100%' p={4} color='white'  overflowY={'scroll'} maxH={'75vh'}>
+      <Box w='100%' bg='black' h='25px'></Box>
       <SimpleGrid columns={1} >
-        <Center >
+        <Center w='100%' bg='black'>
         <Box bg='teal' width='600px'>
       
 
-          <Box minH={'30vh'}>
+          <Box minH={'30vh'} >
           <AspectRatio maxW='1000px' ratio={5 / 3}>
           <iframe  src={selected.video} width="100%" title="YouTube video player" />
           </AspectRatio>
           </Box>
-           <Text fontSize='2xl'>{selected.name}</Text>  
+           <Text fontSize='3xl' bg='black'>{selected.name}</Text>  
         </Box>
         </Center>
 
@@ -59,7 +61,7 @@ function Exercises() {
       <Input placeholder='Search...' bgColor={'white'} color='teal' onChange={(e) => setSearch(e.target.value)} defaultValue={search}/>
       </Box>
         <SimpleGrid
-        background='teal'
+        background='grey'
          maxH='40vh' gridAutoColumns='minmax(200px, 100px)' autoFlow='column' overflowX={'auto'} padding={10} gap={6}>
 
          
@@ -78,6 +80,7 @@ function Exercises() {
 
        </SimpleGrid>
 
+    </Box>
     </Box>
   );
 }
