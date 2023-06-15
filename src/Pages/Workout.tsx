@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { Card, Center, AspectRatio, Button, CardBody, Text, SimpleGrid, UnorderedList, Spinner, Stack, Box, Divider } from '@chakra-ui/react'
+import { Card, Center, AspectRatio, Button, CardBody, Text, SimpleGrid, UnorderedList, Spinner, Stack, Box, Divider, Grid, GridItem } from '@chakra-ui/react'
 import { AddIcon, StarIcon, InfoOutlineIcon } from '@chakra-ui/icons'
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router-dom'
@@ -69,17 +69,30 @@ function Workout( ) {
 
   }, [cow])
 
+  // templateRows='repeat(2, 4fr)' templateColumns='repeat(5, 1fr)'
+  
   return (
-    <Box bg='grey' w='100%'  p={4} color='white' overflowY={'scroll'} maxH={'85vh'}>
-      {loading === false  ? '' : <Spinner size='xl' />}
-      {cow ? 
-        <SimpleGrid columns={1} >
-          <Text fontSize='6xl' bg='black'>{cow.name}</Text>
-          <Text fontSize='4xl' bg='black'>{cow.time} Minutes</Text>
+    <Box bg='black' maxH='84vh'  position='inherit'>
+    <Grid templateRows='repeat(2, 4fr)' templateColumns='repeat(5, 1fr)'bg='black' overflowY={'scroll'} h={'82vh'}>
+      <GridItem rowSpan={2} colSpan={3} bg='black' >  
           <Card bg='black'>
             <CardBody>
-              {cow.reviews.length > 0 ? <Text fontSize='md' as='i'>"{cow.reviews[0].write_up}"</Text> : ''}
-                       <Stack direction='row' spacing='10px' justify={'center'}>
+              {/* {cow.reviews.length > 0 ? <Text fontSize='md' as='i'>"{cow.reviews[0].write_up}"</Text> : ''} */}
+            </CardBody>
+            </Card>
+            <Box bg='black' padding='5%' >
+              <AspectRatio maxW='1000px' ratio={5 / 3}>
+                <iframe  src={video} width="100%" title="YouTube video player" />
+              </AspectRatio>
+              <Text fontSize='4xl' color='white'>{name}</Text>
+            </Box>
+    
+
+    </GridItem>
+    <GridItem rowSpan={2} colSpan={2} bg='black' overflowY={'scroll'}>
+    <Text fontSize='6xl' bg='black' color='white'>{cow.name}</Text>
+          <Text fontSize='4xl' bg='black' color='white'>{cow.time} Minutes</Text>
+          <Stack direction='row' spacing='10px' justify={'center'}>
                 <Button leftIcon={<InfoOutlineIcon />} colorScheme='teal' variant='solid' onClick={() => history.push(`/${direct}`)}>
                   Back
                 </Button>
@@ -96,30 +109,7 @@ function Workout( ) {
                     Save Workout
                   </Button> }
                 </Stack>
-              </CardBody>
-            </Card>
-          {/* <Center>
-            {cow.reviews.length > 0 ? [...Array(cow.reviews[0].rating)].map((value: undefined, index: number) => (
-              <StarIcon w={5} h={5} color='gold' key={index}/>
-              )) : ''
-            }
-          </Center> 
-          {cow.reviews.length > 0 ? <Text fontSize='md' as='i'>"{cow.reviews[0].write_up}"</Text> : ''} */}
-        </SimpleGrid> 
-      : '' }
-      {loading === false && cow === undefined ?
-        <Text>Not Available</Text> : ''}
-      {cow ?
-        <SimpleGrid columns={1} >
-          <Center w='100%' bg='black'>
-            <Box bg='black' width='800px' >
-              <AspectRatio maxW='1000px' ratio={5 / 3}>
-                <iframe  src={video} width="100%" title="YouTube video player" />
-              </AspectRatio>
-              <Text fontSize='4xl'>{name}</Text>
-            </Box>
-          </Center>
-          {cow.workout_exercises.map((info: any) => 
+      {cow.workout_exercises.map((info: any) => 
             <SimpleGrid columns={1} >
               <Center >
                 <Box bg='teal' width='600px' onClick={() => handleClick(info)}>
@@ -131,10 +121,69 @@ function Workout( ) {
             </SimpleGrid> 
           )}
 
-          </SimpleGrid> 
-        : ''}
+    </GridItem>
+ 
+    </Grid>
     </Box>
+
+
+  //   <Box bg='grey' w='100%'  p={4} color='white' overflowY={'scroll'} maxH={'85vh'}>
+  //     {loading === false  ? '' : <Spinner size='xl' />}
+  //     {cow ? 
+  //       <SimpleGrid columns={1} >
+  //         <Text fontSize='6xl' bg='black'>{cow.name}</Text>
+  //         <Text fontSize='4xl' bg='black'>{cow.time} Minutes</Text>
+  //         <Card bg='black'>
+  //           <CardBody>
+  //             {cow.reviews.length > 0 ? <Text fontSize='md' as='i'>"{cow.reviews[0].write_up}"</Text> : ''}
+  //                      <Stack direction='row' spacing='10px' justify={'center'}>
+  //               <Button leftIcon={<InfoOutlineIcon />} colorScheme='teal' variant='solid' onClick={() => history.push(`/${direct}`)}>
+  //                 Back
+  //               </Button>
+  //               { widList.includes(cow.id) ?
+  //                 <Button rightIcon={<IoHeartSharp />} colorScheme='teal' variant='outline' 
+  //                   onClick={() => {
+  //                     let dragon = widList.indexOf(cow.id)
+  //                     handleRemove(dragon)}
+  //                   }>
+  //                   Saved
+  //                 </Button>
+  //               :
+  //                 <Button rightIcon={<IoHeartOutline />} colorScheme='teal' variant='outline' onClick={() => saveWorkout(cow.id)}>
+  //                   Save Workout
+  //                 </Button> }
+  //               </Stack>
+  //             </CardBody>
+  //           </Card>
+  //         {/* <Center>
+  //           {cow.reviews.length > 0 ? [...Array(cow.reviews[0].rating)].map((value: undefined, index: number) => (
+  //             <StarIcon w={5} h={5} color='gold' key={index}/>
+  //             )) : ''
+  //           }
+  //         </Center> 
+  //         {cow.reviews.length > 0 ? <Text fontSize='md' as='i'>"{cow.reviews[0].write_up}"</Text> : ''} */}
+  //       </SimpleGrid> 
+  //     : '' }
+  //     {loading === false && cow === undefined ?
+  //       <Text>Not Available</Text> : ''}
+  //     {cow ?
+  //       <SimpleGrid columns={1} >
+  //         <Center w='100%' bg='black'>
+  //           <Box bg='black' width='800px' >
+  //             <AspectRatio maxW='1000px' ratio={5 / 3}>
+  //               <iframe  src={video} width="100%" title="YouTube video player" />
+  //             </AspectRatio>
+  //             <Text fontSize='4xl'>{name}</Text>
+  //           </Box>
+  //         </Center>
+    
+
+  //         </SimpleGrid> 
+  //       : ''}
+  //   </Box>
+  // );
   );
 }
 
 export default Workout;
+

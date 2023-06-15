@@ -20,6 +20,7 @@ import EditDay from './Pages/EditDay';
 import NewDay from './Pages/NewDay';
 import { SavedContextProvider } from './Context/Saved.context';
 
+
 function App() {
 
   return (
@@ -27,6 +28,7 @@ function App() {
     <WorkoutContextProvider>
     <ExerciseContextProvider>
     <SavedContextProvider>
+
     <Box className="App" >
       <Box bg='black' position='sticky' top='0'> 
         <Text color='white' as='b' fontSize='6xl' >WORKOUT PLANNER</Text>
@@ -71,6 +73,7 @@ function App() {
         </Route>
       </Switch>
     </Box>
+
     </SavedContextProvider>
     </ExerciseContextProvider>
     </WorkoutContextProvider>
