@@ -16,7 +16,6 @@ import { WorkoutContextProvider } from './Context/Workout.context'
 import { UserContextProvider } from './Context/User.context'
 import { ExerciseContextProvider } from './Context/Exercise.context'
 import WorkoutDay from './Pages/WorkoutDay';
-import EditDay from './Pages/EditDay';
 import NewDay from './Pages/NewDay';
 import { SavedContextProvider } from './Context/Saved.context';
 
@@ -67,9 +66,6 @@ function App() {
         </Route>
         <Route exact path='/workout_days/:id'>
           <WorkoutDay />
-        </Route>
-        <Route exact path='/workout_days/:id/edit'>
-          <EditDay />
         </Route>
       </Switch>
     </Box>

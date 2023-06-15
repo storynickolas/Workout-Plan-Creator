@@ -27,6 +27,7 @@ import weights from '../Weights.jpg';
 import { useHistory } from 'react-router-dom'
 import { UserContext } from '../Context/User.context';
 import { useParams } from 'react-router-dom';
+import { WorkoutContext } from "../Context/Workout.context";
 
 
 
@@ -41,6 +42,8 @@ const WorkoutDay = () => {
   const {user, setUser} = useContext(UserContext)
 
   const history = useHistory();
+
+  const {workoutList, setWorkoutList} = useContext(WorkoutContext);
 
 
   type QuizParams = {
@@ -77,8 +80,6 @@ const WorkoutDay = () => {
   useEffect(() => {
 
     let cow = user.id
-
-    console.log(data)
 
     fetch(`/workouts/${Number(data.item.workout.id)}`).then((response) => {
       if (response.ok) {
