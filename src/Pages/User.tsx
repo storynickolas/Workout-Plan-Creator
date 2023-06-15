@@ -3,7 +3,6 @@ import { Card, Button, CardBody, Text, Stack, SimpleGrid, Divider, Box, TableCon
 import { useHistory } from 'react-router-dom'
 import { UserContext } from '../Context/User.context';
 import { AddIcon, StarIcon, InfoOutlineIcon} from '@chakra-ui/icons'
-import AddDay from '../Components/AddDay';
 import EditButton from '../Components/EditButton';
 import { SavedContext } from '../Context/Saved.context';
 import { WorkoutContext } from '../Context/Workout.context';

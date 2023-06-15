@@ -1,75 +1,23 @@
-import { useState, useContext, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { useState } from "react";
 import {
   Flex,
-  Heading,
-  Input,
   Button,
-  InputGroup,
-  Stack,
   Box,
-  Avatar,
-  InputRightElement,
   Text,
-  FormControl,
-  useStatStyles,
   Select
 
 } from "@chakra-ui/react";
 
 import weights from '../Weights.jpg';
 import { useHistory } from 'react-router-dom'
-import { UserContext } from '../Context/User.context';
-import { useParams } from 'react-router-dom';
-
 
 const NewDay = () => {
-  // type data = {
-  //   name: string,
-  //   saved: []
-  // };
-  // let data = {name: '', saved: [{name: ''}]}
 
   const history = useHistory();
   const data = history.location.state as {day: string, saved: [], user: number}
 
   const [selectedWorkout, setSelectedWorkout] = useState('')
 
-  // const [day, setDay] = useState({day: '', workout: {id: 0, name: ''}});
-
-  // const {user, setUser} = useContext(UserContext)
-
-  // const history = useHistory();
-
-
-  // type QuizParams = {
-  //   id: string;
-  // };
-
-  
-  // const { id } = useParams<QuizParams>();
-
-
-
-  // useEffect(() => {
-
-  //   let cow = user.id
-
-  //   console.log(cow)
-
-  //   fetch(`/workout_days/${Number(id)}`).then((response) => {
-  //     if (response.ok) {
-  //       response.json().then((user) => 
-  //       {
-  //         console.log(user)
-  //         setDay(user[0])
-  //         console.log(user.day)
-
-  //       });
-  //     }
-  //   });
-
-  // }, []);
 
   function handleChange(option : string) {
     setSelectedWorkout(option)
