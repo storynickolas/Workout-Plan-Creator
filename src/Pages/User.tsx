@@ -33,6 +33,7 @@ function User() {
         console.log('Logged Out');
         // sessionStorage.setItem('user', 'Tom')
         setUser({id: 0, username: '', schedule: {id: 0}, saved_workouts: [{ id: 0, name: "test", workout_id: 0 }]})
+        setWidList([])
       }
     });
     history.push(`/login`);

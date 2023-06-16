@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from 'react-router-dom';
 import {
   Flex,
@@ -14,6 +14,8 @@ import {
   FormControl,
 
 } from "@chakra-ui/react";
+import { useHistory } from 'react-router-dom'
+import { UserContext } from '../Context/User.context';
 
 import weights from '../Weights.jpg';
 
@@ -22,12 +24,18 @@ import weights from '../Weights.jpg';
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
 
+  const [success, setSuccess] = useState(false);
+
 
   const handleShowClick = () => setShowPassword(!showPassword);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+
+  const {user, setUser} = useContext(UserContext)
+
+  const history = useHistory();
 
   function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -43,20 +51,8 @@ const Signup = () => {
       }),
     }).then((r) => {
       if (r.ok) {
-        fetch("/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username, password }),
-        })
-        r.json().then((user) => console.log(user.username));
-      }
-    });
-
-    console.log({
-      username,
-    })
+        setSuccess(true)
+    }});
   }
 
   return (
@@ -71,6 +67,19 @@ const Signup = () => {
       justifyContent="center"
       alignItems="center"
     >
+      {success ? 
+       <Box minW='30vw' 
+       p="1rem"
+       backgroundColor="white"
+     >
+       <Avatar bg="teal.500" />
+       <Heading color="teal.400">Account Created!</Heading>
+       <Button onClick={() => history.push('/login')}>Go to Login</Button>
+
+     </Box>   
+      
+      
+      :
       <Box minW='30vw' 
         p="1rem"
         backgroundColor="white"
@@ -137,7 +146,7 @@ const Signup = () => {
             </Stack>
           </form>
 
-      </Box>      
+      </Box>   }   
     </Flex>
   );
 };

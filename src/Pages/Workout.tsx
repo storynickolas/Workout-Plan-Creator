@@ -89,10 +89,10 @@ function Workout( ) {
     
 
     </GridItem>
-    <GridItem rowSpan={2} colSpan={2} bg='black' overflowY={'scroll'}>
+    <GridItem rowSpan={2} colSpan={2} bg='black' overflowY={'scroll'} >
     <Text fontSize='6xl' bg='black' color='white'>{cow.name}</Text>
           <Text fontSize='4xl' bg='black' color='white'>{cow.time} Minutes</Text>
-          <Stack direction='row' spacing='10px' justify={'center'}>
+          <Stack direction='row' spacing='10px' justify={'center'} padding='2%'>
                 <Button leftIcon={<InfoOutlineIcon />} colorScheme='teal' variant='solid' onClick={() => history.push(`/${direct}`)}>
                   Back
                 </Button>
@@ -110,11 +110,12 @@ function Workout( ) {
                   </Button> }
                 </Stack>
       {cow.workout_exercises.map((info: any) => 
-            <SimpleGrid columns={1} >
+            <SimpleGrid columns={1}>
               <Center >
-                <Box bg='teal' width='600px' onClick={() => handleClick(info)}>
-                  <Text fontSize='2xl'>{info.exercise.name} - {info.sets} sets of {info.reps}</Text>
-                  {info.exercise.name === name ? '' : <Button color='black' onClick={() => handleClick(info)}>Tutorial</Button>}
+                <Box bg='teal' width='600px' onClick={() => handleClick(info)} >
+                  <Text fontSize='3xl'>{info.exercise.name}</Text>
+                  <Text fontSize='2xl'>{info.sets} sets of {info.reps}</Text>
+                  {info.exercise.name === name ? '' : <Button color='white' variant='outline' onClick={() => handleClick(info)}>Tutorial</Button>}
                   <Divider></Divider>
                 </Box>
               </Center>

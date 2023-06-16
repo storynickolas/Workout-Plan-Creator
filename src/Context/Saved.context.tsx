@@ -124,19 +124,3 @@ const SavedContextProvider = (props: ContainerProps) => {
 };
 
 export { SavedContext, SavedContextProvider };
-
-
-// useEffect(() => {
-//   console.log(user.saved_workouts)
-//   let cow : any[] = []
-//   let dog : any[] = []
-
-//   user.saved_workouts.forEach((item) => {
-//     cow.push(item.workout_id)
-//     dog.push(item.id)
-//   })
-
-//     setSaved([...cow])
-//     setMyw([...dog])
-
-// }, [user, user.saved_workouts])  

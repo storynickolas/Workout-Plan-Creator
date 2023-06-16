@@ -1,46 +1,56 @@
-# Getting Started with Create React App
+# Beer Rating: React/Rails API APP
+
+![Sample Page](https://github.com/storynickolas/workout-frontend/blob/main/Sample%20Page.png)
+
+Accompanying Back End Rails Project Located Here:
+
+## Description
+
+This project allows a user to look through a list of user generated workouts, save the ones they are interested and add them to their weekly schedule.  Users are also able to create their own workouts to add to their schedule as well.  Additionally, their is a searchable libarary of exercises including demonstrations of proper form of all of the exercises included in the listed workouts.
+
+## Requirements
+
+- NodeJS (v16), and npm
+- Render account
+- Postgresql
+
+See Environment Setup below for instructions on installing these tools if you
+don't already have them.
+
+## Setup
+
+When you're ready to start using the app, run:
+
+```sh
+bundle install
+npm install --prefix client
+```
+
+You can use the following commands to run the application:
+
+- `npm start --prefix client`: run the frontend on
+  [http://localhost:4000](http://localhost:4000)
+
+
+## Additional Resources
+
+### Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+### Chakra UI
 
-In the project directory, you can run:
+This project utilizes Chakra UI for styling [Chakra UI](https://chakra-ui.com/getting-started).
 
-### `npm start`
+## License
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+MIT license @ [MIT](https://github.com/facebook/react/blob/main/LICENSE).
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Images
 
-### `npm test`
+All images used in this app are free, royalty free creater uploaded images from: [Pexels](https://www.pexels.com/)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Exercise Tutorials
 
-### `npm run build`
+For more greate exercise tutorials visit the youtube pages of any of the included creators
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
