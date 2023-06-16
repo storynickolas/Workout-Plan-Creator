@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext} from "react";
+import { UserContext } from "./User.context";
 
 // create context
 
@@ -36,11 +37,13 @@ const SavedContextProvider = (props: ContainerProps) => {
   const [savedList, setSavedList] = useState<{id: number, workout: {name: string}, workout_id: number}[]>([{id: 0, workout_id: 0, workout: {name: ''}}])
   const [widList, setWidList] = useState<number[]>([])
   const [sidList, setSidList] = useState<number[]>([])
+
+  const {user} = useContext(UserContext)
   
   let cow = sessionStorage.getItem('user_id')
 
   useEffect(() => {
-    fetch(`/users/${cow}`).then((response) => {
+    fetch(`/users/${sessionStorage.getItem('user_id')}`).then((response) => {
       if (response.ok) {
         response.json().then((user) => 
         {
@@ -57,7 +60,7 @@ const SavedContextProvider = (props: ContainerProps) => {
         });
       }
     });
-  }, [cow]);
+  }, [cow, user]);
 
   function handleRemove(sid : number) {
     let cow = sidList[sid]

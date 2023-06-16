@@ -59,7 +59,7 @@ const Login = () => {
           sessionStorage.setItem('user_id', value.id)
 
         }).then(() => {
-          history.push(`/mypage`)
+          history.push(`/`)
           // console.log(user)
         });
       } else {
