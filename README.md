@@ -1,4 +1,4 @@
-# Beer Rating: React/Rails API APP
+# Workout Planner: React/Rails API APP
 
 ![Sample Page](https://github.com/storynickolas/Workout-Plan-Creator/blob/main/Sample%20Page.png)
 
