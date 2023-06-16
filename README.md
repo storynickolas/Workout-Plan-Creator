@@ -1,6 +1,6 @@
 # Beer Rating: React/Rails API APP
 
-![Sample Page](https://github.com/storynickolas/workout-frontend/blob/main/Sample%20Page.png)
+![Sample Page](https://github.com/storynickolas/Workout-Plan-Creator/blob/main/Sample%20Page.png)
 
 Accompanying Back End Rails Project Located Here:
 
