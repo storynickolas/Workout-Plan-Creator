@@ -2,7 +2,8 @@
 
 ![Sample Page](https://github.com/storynickolas/Workout-Plan-Creator/blob/main/Sample%20Page.png)
 
-Accompanying Back End Rails Project Located Here:
+## Accompanying Back End Rails Project Located Here:
+[workout-api](https://github.com/storynickolas/workout-api)
 
 ## Description
 
