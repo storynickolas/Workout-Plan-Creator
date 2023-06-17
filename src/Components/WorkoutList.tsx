@@ -9,7 +9,7 @@ import { SavedContext } from '../Context/Saved.context';
 
 function WorkoutLists( { newLength } : {newLength : number } ) {
 
-  const {workoutList, setWorkoutList} = useContext(WorkoutContext);
+  const {workoutList} = useContext(WorkoutContext);
 
   const {handleRemove, saveWorkout, widList } = useContext(SavedContext);
   

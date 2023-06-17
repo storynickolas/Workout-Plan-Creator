@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
 import { Button, Box } from '@chakra-ui/react'
 import { UserContext } from '../Context/User.context';
 import { useHistory } from 'react-router-dom'
@@ -12,26 +11,14 @@ function Navbar() {
 
   return (
     <Box bg='white' minH='5vh' position='sticky'>
-      <Button >
-        <Link to={`/`} >Home</Link>
-      </Button>
-      <Button>
-        <Link to={`/workouts`} >Workouts</Link>
-      </Button>
-      <Button>
-        <Link to={`/exercises`} >Exercises</Link>
-      </Button>
-      <Button>
-        <Link to={`/newProgram`}>Add A Workout</Link>
-      </Button>
+      <Button onClick={() => history.push('/')}>Home</Button>
+      <Button onClick={() => history.push('/workouts')}>Workouts</Button>
+      <Button onClick={() => history.push('/exercises')}>Exercises</Button>
+      <Button onClick={() => history.push('/newProgram')}>Add A Workout</Button>
       {user.id !== 0 ?
-      <Button>
-        <Link to={`/myPage`}>My Page</Link>
-      </Button>
+      <Button onClick={() => history.push('/myPage')}>MyPage</Button>
       :
-      <Button>
-        <Link to={`/login`} >Login</Link>
-      </Button>}
+      <Button onClick={() => history.push('/login')}>Login</Button>}
     </Box>
   );
 }

@@ -40,7 +40,7 @@ const SavedContextProvider = (props: ContainerProps) => {
 
   const {user} = useContext(UserContext)
   
-  let cow = sessionStorage.getItem('user_id')
+  let browserUser = sessionStorage.getItem('user_id')
 
   useEffect(() => {
     fetch(`/users/${sessionStorage.getItem('user_id')}`).then((response) => {
@@ -60,31 +60,31 @@ const SavedContextProvider = (props: ContainerProps) => {
         });
       }
     });
-  }, [cow, user]);
+  }, [browserUser, user]);
 
   function handleRemove(sid : number) {
-    let cow = sidList[sid]
+    let removeIndex = sidList[sid]
 
-    if(cow) {
-      fetch(`/saved_workouts/${cow}`, { method: "DELETE" }).then((r) => {
-              if (r.ok) {
-                console.log('success')
-                let donkey = [...savedList]
-                let otter = [...widList]
-                let tiger = [...sidList]
-                setSavedList([...donkey.slice(0,sid),...donkey.slice(sid + 1,savedList.length)])
-                setWidList([...otter.slice(0,sid),...otter.slice(sid + 1,widList.length)])
-                setSidList([...tiger.slice(0,sid),...tiger.slice(sid + 1,sidList.length)])
-              }
-        })
+    if(removeIndex) {
+      fetch(`/saved_workouts/${removeIndex}`, { method: "DELETE" }).then((r) => {
+        if (r.ok) {
+          console.log('success')
+          let savedWs = [...savedList]
+          let wId = [...widList]
+          let sId = [...sidList]
+          setSavedList([...savedWs.slice(0,sid),...savedWs.slice(sid + 1,savedList.length)])
+          setWidList([...wId.slice(0,sid),...wId.slice(sid + 1,widList.length)])
+          setSidList([...sId.slice(0,sid),...sId.slice(sid + 1,sidList.length)])
+        }
+      })
     }
   }
 
   function saveWorkout(workout: number) {
-    if(cow !== null) {
+    if(browserUser !== null) {
       let savedWorkout = {
       workout_id: workout,
-      user_id: Number(cow)
+      user_id: Number(browserUser)
       }
        fetch(`/saved_workouts`, {
       method: "POST",
@@ -101,15 +101,15 @@ const SavedContextProvider = (props: ContainerProps) => {
           console.log(response.errors)
         }
         else {
-          let donkey = [...savedList]
-          let otter = [...widList]
-          let tiger = [...sidList]
-          donkey.push(response)
-          otter.push(response.workout.id)
-          tiger.push(response.id)
-          setSavedList([...donkey])
-          setWidList([...otter])
-          setSidList([...tiger])
+          let savedWs = [...savedList]
+          let wId = [...widList]
+          let sId = [...sidList]
+          savedWs.push(response)
+          wId.push(response.workout.id)
+          sId.push(response.id)
+          setSavedList([...savedWs])
+          setWidList([...wId])
+          setSidList([...sId])
         }
       })
     }

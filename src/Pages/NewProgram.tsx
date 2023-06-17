@@ -4,7 +4,6 @@ import AddButton from '../Components/AddButton';
 
 import { ExerciseContext } from '../Context/Exercise.context';
 import { useHistory } from 'react-router-dom'
-import { useParams } from 'react-router-dom';
 import { WorkoutContext } from '../Context/Workout.context';
 
 
@@ -21,18 +20,11 @@ function NewProgram() {
   interface dataType {
     item: {id: number, name: string, time: number, user_id: number, workout_exercises: any[]}
   }
-  // [ {id: number, exercise: {name: string, id: number}, sets: number, reps: number}]
 
   let data : dataType = history.location.state as {item: {id: 0, name: '', time: 0, user_id: 0, workout_exercises: [{id: 0, exercise: {name: '', id: 0}, sets: 0, reps: 0}]}}
 
-  type itemIdParams = {
-    id: string;
-  };
-
-  const { id } = useParams<itemIdParams>();
 
   const [clicked, setClicked] = useState(false)
-
 
   const [newW, setNewW] = useState({id: 0, name: '', time: 0, user_id: 0})
 
@@ -41,7 +33,6 @@ function NewProgram() {
     if(myData.name !== ''){
       setClicked(true)
     }
-    
   }
 
   ////////////////////////////////// list = workout_exercises
@@ -66,49 +57,32 @@ function NewProgram() {
     }
     setList([...newList])
 
-
-  
-
     //Make Exercise No Longer Draggable
  
-    console.log(allExercises[pos])
     let currentExercises = [...selected]
     currentExercises[pos] = false
     setSelected([...currentExercises])
   }
 
-    useEffect(() => {
-      if(data) {
-
-      
+  useEffect(() => {
+    if(data) {
       handleNew(data.item)
+      let browserUser = data.item.user_id
 
-  
-      let dog = data.item.user_id
-
-      interface cowType {
+      interface editingWorkoutType {
         id: number, name: string, exercise_id: number, workout_id: number, reps: number, sets: number, status: boolean, user_id: number
       };
     
-    let cow : cowType[] = [];
+      let editingWorkout : editingWorkoutType[] = [];
 
-    console.log(data)
-
-    // [{id: 0, exercise: {name: '', id: 0}, sets: 0, reps: 0}]
-
-    if(data?.item?.workout_exercises[0]?.exercise?.id !== 0){
-        data.item.workout_exercises.forEach((item) => {
-        cow.push({id: item.id, name: item.exercise.name, exercise_id: item.exercise.id, workout_id: data.item.id, reps: item.reps, sets: item.reps, status: true, user_id: dog})
-      })
+      if(data?.item?.workout_exercises[0]?.exercise?.id !== 0){
+          data.item.workout_exercises.forEach((item) => {
+            editingWorkout.push({id: item.id, name: item.exercise.name, exercise_id: item.exercise.id, workout_id: data.item.id, reps: item.reps, sets: item.reps, status: true, user_id: browserUser})
+        })
+      }
+      setList([...editingWorkout])
     }
-
-    
-  
-        setList([...cow])
-  }
-      
-  
-    }, [data]);
+  }, [data]);
     
 
   function moreStuff(item: any) {
@@ -119,61 +93,47 @@ function NewProgram() {
     }
     else{
       let newList = [...list]
-      let cattle = newList.indexOf(item)
-      newList.splice(cattle, 1)
+      let exercsiseRemoving = newList.indexOf(item)
+      newList.splice(exercsiseRemoving, 1)
       setList(newList)
     }
-
 
     if(item.id) {
     fetch(`/workout_exercises/${item.id}`, { method: "DELETE" }).then((r) => {
       if (r.ok) {
       console.log('start');
-
         /// Find index of workout on myWorkout List
-       
-        let bat : number[] = []
-
+        let workoutIndex : number[] = []
         workoutList.forEach((item) => {
           if(item.name === newW.name) {
-            bat.push(workoutList.indexOf(item))
-      
+            workoutIndex.push(workoutList.indexOf(item))
           }
         })
         console.log('start')
 
         /// Workout in quesiton
-
-        let fly = workoutList[bat[0]]
+        let editingWorkout = workoutList[workoutIndex[0]]
 
         /// workout exercises of workout
-        
-        let cow = fly.workout_exercises
+        let editingExercises = editingWorkout.workout_exercises
 
         /// find index of workout exercise
+        let exerciseIndex : number[] = []
 
-        let possum : number[] = []
-
-        cow.forEach((ex, index) => {
+        editingExercises.forEach((ex, index) => {
           if(ex.id === item.id){
-            possum.push(index)
+            exerciseIndex.push(index)
           }
         })
 
         /// remove index from workout exercises
-
-        cow = [...cow.slice(0, possum[0]), ...cow.slice(possum[0] + 1, cow.length)]
-
-        fly.workout_exercises = [...cow]
+        editingExercises = [...editingExercises.slice(0, exerciseIndex[0]), ...editingExercises.slice(exerciseIndex[0] + 1, editingExercises.length)]
+        editingWorkout.workout_exercises = [...editingExercises]
 
         /// Add updated workout back into list
-
-        let turtle = [...workoutList]
-
-        turtle[bat[0]] = fly
-
-        setWorkoutList([...turtle])
-    
+        let updatedList = [...workoutList]
+        updatedList[workoutIndex[0]] = editingWorkout
+        setWorkoutList([...updatedList])
         console.log('end');
 
       }
@@ -376,21 +336,13 @@ function NewProgram() {
 
   useEffect(() => {
 
-
-    console.log(selected)
     let manta = [...selected]
-    console.log(searched)
-    console.log(list)
-    console.log(allExercises)
-
-    let tiger = [...allExercises]
+    let allItems = [...allExercises]
     let ray : number[] = []
 
     list.forEach((ex) => {
-      ray.push(tiger.findIndex(item => item.name === ex.name))
+      ray.push(allItems.findIndex(item => item.name === ex.name))
     })
-    
-    console.log(ray)
 
     manta.forEach((ex, index) => {
       if(ray.includes(index)){
@@ -412,11 +364,8 @@ function NewProgram() {
 
     <Box bg='grey' w='100%' h='100%' minH={'85vh'} p={4} color='white'>
       <Box bg='teal' >
-
         {clicked && newW.name !== '' ? <Text fontSize='6xl'>{newW.name}</Text> : ''}
         {clicked && newW.name !== '' ? <Text fontSize='4xl'>{newW.time} minutes</Text> : ''}
-
-
       </Box>
 
       {Number(sessionStorage.getItem('user_id')) === 0 ? 

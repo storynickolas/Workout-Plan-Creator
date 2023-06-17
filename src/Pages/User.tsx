@@ -104,7 +104,7 @@ function User() {
   return (
     <Box bg='grey' w='100%' maxH='85vh' p={4} color='white' position='inherit' overflowY={'scroll'} >
 
-{browserUser !== '' ?
+      {user.username !== '' ?
       <Box>
         <Box w='100%' bg='grey' paddingBottom='2%'>
           <Text fontSize='4xl'>Welcome Back {user.username}</Text>

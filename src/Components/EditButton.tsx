@@ -15,14 +15,12 @@ function EditButton({ item } : any) {
   const {myWorkouts, setMyWorkouts} = useContext(WorkoutContext)
 
   function handleSave() {
-    let lizard = Number(sessionStorage.getItem('user_id'))
-    let cow = {
+    let browserUser = Number(sessionStorage.getItem('user_id'))
+    let editedProgram = {
       name: workout,
       time: Number(time),
-      user_id: lizard
+      user_id: browserUser
     }
-
-  
 
     fetch(`/workouts/${item.id}`, {
       method: "PATCH",
@@ -30,20 +28,14 @@ function EditButton({ item } : any) {
         "Content-Type": "application/json",
         "Accept": "application/json",
       },
-      body: JSON.stringify(cow),
+      body: JSON.stringify(editedProgram),
     })
       .then((response) => response.json())
       .then((response) => {
-
-        let donkey = [...myWorkouts]
-
-        let frog = donkey.findIndex(item => item.id === response[0].id)
-
-
-        donkey[frog] = response[0]
-
-
-        setMyWorkouts([...donkey])
+        let usersWs = [...myWorkouts]
+        let editedW = usersWs.findIndex(item => item.id === response[0].id)
+        usersWs[editedW] = response[0]
+        setMyWorkouts([...usersWs])
       })
 
     onClose()
