@@ -1,5 +1,4 @@
-import { useState, useContext } from "react";
-import { Link } from 'react-router-dom';
+import { useState } from "react";
 import {
   Flex,
   Heading,
@@ -15,7 +14,6 @@ import {
 
 } from "@chakra-ui/react";
 import { useHistory } from 'react-router-dom'
-import { UserContext } from '../Context/User.context';
 
 import weights from '../Weights.jpg';
 
@@ -32,8 +30,6 @@ const Signup = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-
-  const {user, setUser} = useContext(UserContext)
 
   const history = useHistory();
 
@@ -56,7 +52,6 @@ const Signup = () => {
   }
 
   return (
-
     <Flex
       flexDirection="column"
       width="100wh"
@@ -75,10 +70,7 @@ const Signup = () => {
        <Avatar bg="teal.500" />
        <Heading color="teal.400">Account Created!</Heading>
        <Button onClick={() => history.push('/login')}>Go to Login</Button>
-
      </Box>   
-      
-      
       :
       <Box minW='30vw' 
         p="1rem"
@@ -102,14 +94,10 @@ const Signup = () => {
               </FormControl>
               <Text alignSelf='start'>Password</Text>
               <FormControl>
-                
                 <InputGroup>
-                  
                   <Input
                     type={showPassword ? "text" : "password"}
                     onChange={(e) => setPassword(e.target.value)}
-      
-
                   />
                   <InputRightElement width="4.5rem">
                     <Button h="1.75rem" size="sm" onClick={handleShowClick}>
@@ -124,7 +112,6 @@ const Signup = () => {
                   <Input
                     type={showPassword ? "text" : "password"}
                     onChange={(e) => setPasswordConfirmation(e.target.value)}
-
                   />
                   <InputRightElement width="4.5rem">
                     <Button h="1.75rem" size="sm" onClick={handleShowClick}>
@@ -145,7 +132,6 @@ const Signup = () => {
               </Button>
             </Stack>
           </form>
-
       </Box>   }   
     </Flex>
   );

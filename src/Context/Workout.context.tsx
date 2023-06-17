@@ -45,6 +45,7 @@ const WorkoutContextProvider = (props: ContainerProps) => {
       if (response.ok) {
         response.json().then((user) => 
         {
+          console.log(user)
           setMyWorkouts(user)
         });
       }
@@ -52,20 +53,6 @@ const WorkoutContextProvider = (props: ContainerProps) => {
 
 
   }, []);
-
-  useEffect(() => {
-    let mine : any[] = []
-    workoutList.forEach((item) => {
-      if(item.user_id === cow){
-        console.log('checking')
-        mine.push(item)
-      }
-    })
-
-    setMyWorkouts([...mine])
-
-
-  }, [workoutList]);
 
   return (
 

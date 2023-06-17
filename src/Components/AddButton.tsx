@@ -6,7 +6,7 @@ import { WorkoutContext } from '../Context/Workout.context';
 function AddButton({ handleNew } : {handleNew : (response: {id: number, name: string, time: number, user_id: number}) => void}) {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const {workoutList, setWorkoutList} = useContext(WorkoutContext);
+  const {workoutList, setWorkoutList, myWorkouts, setMyWorkouts} = useContext(WorkoutContext);
 
   const [workout, setWorkout] = useState('')
   const [time, setTime] = useState('')
@@ -14,20 +14,19 @@ function AddButton({ handleNew } : {handleNew : (response: {id: number, name: st
 
 
   function handleSave() {
-    let lizard = Number(sessionStorage.getItem('user_id'))
-    let cow = {
+    let browserUser = Number(sessionStorage.getItem('user_id'))
+    let newProgram = {
       name: workout,
       time: Number(time),
-      user_id: lizard
+      user_id: browserUser
     }
-    console.log(cow)
     fetch(`/workouts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
       },
-      body: JSON.stringify(cow),
+      body: JSON.stringify(newProgram),
     })
       .then((response) => response.json())
       .then((response) => {
@@ -37,9 +36,12 @@ function AddButton({ handleNew } : {handleNew : (response: {id: number, name: st
         }
         else {
 
-          let tiger = [...workoutList]
-          tiger.push(response)
-          setWorkoutList([...tiger])
+          let allWorkouts = [...workoutList]
+          allWorkouts.push(response)
+          let userCreated = [...myWorkouts]
+          userCreated.push(response)
+          setMyWorkouts([...userCreated])
+          setWorkoutList([...allWorkouts])
           handleNew(response)
 
         }

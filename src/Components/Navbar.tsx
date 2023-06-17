@@ -2,10 +2,13 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Box } from '@chakra-ui/react'
 import { UserContext } from '../Context/User.context';
+import { useHistory } from 'react-router-dom'
 
 
 function Navbar() {
   const {user} = useContext(UserContext)
+
+  const history = useHistory();
 
   return (
     <Box bg='white' minH='5vh' position='sticky'>

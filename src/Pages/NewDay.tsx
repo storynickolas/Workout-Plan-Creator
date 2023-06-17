@@ -24,7 +24,7 @@ const NewDay = () => {
   }
 
   function handleAdd() {
-    let cow = {
+    let newProgram = {
       'day': data.day,
       'workout_id': Number(selectedWorkout),
       'schedule_id': data.user
@@ -35,20 +35,16 @@ const NewDay = () => {
         "Content-Type": "application/json",
         "Accept": "application/json",
       },
-      body: JSON.stringify(cow),
+      body: JSON.stringify(newProgram),
     })
       .then((response) => response.json())
       .then((response) => {
         if(response.errors){
-
           console.log(response.errors)
         }
         else {
-
           console.log(response)
-
-        history.replace(`/mypage`)
-
+          history.replace(`/mypage`)
         }
       })
   }

@@ -12,16 +12,11 @@ import {
   InputRightElement,
   Text,
   FormControl,
-  useStatStyles,
-
 } from "@chakra-ui/react";
 
 import weights from '../Weights.jpg';
 import { useHistory } from 'react-router-dom'
 import { UserContext } from '../Context/User.context';
-
-
-
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,7 +25,7 @@ const Login = () => {
   const [errors, setErrors] = useState([]);
   const [username, setUsername] = useState("");
 
-  const {user, setUser} = useContext(UserContext)
+  const {setUser} = useContext(UserContext)
 
   const history = useHistory();
 
@@ -47,20 +42,15 @@ const Login = () => {
     }).then((r) => {
       if (r.ok) {
         r.json().then((value) => {
-          console.log(user)
-          console.log(value)
           if(value.schedule !== null) {
             setUser({id: value.id, username: value.username, schedule: {id: value.schedule.id}, saved_workouts: value.saved_workouts})
           }
           else{
             setUser({id: value.id, username: value.username, schedule: {id: 0}, saved_workouts: value.saved_workouts})
           }
-          
           sessionStorage.setItem('user_id', value.id)
-
         }).then(() => {
-          history.push(`/`)
-          // console.log(user)
+          history.push(`/myPage`)
         });
       } else {
         r.json().then((err) => setErrors(err.errors));
