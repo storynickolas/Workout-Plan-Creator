@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
+import { UserContext } from '../Context/User.context';
 
 // create context
 
@@ -29,30 +30,31 @@ const WorkoutContextProvider = (props: ContainerProps) => {
   const [workoutList, setWorkoutList] = useState<{id: number, name: string, time: number, user_id: number, workout_exercises: {id: number, name: string}[], reviews: {rating: number}[]}[]>([{id: 0, name: '', time: 0, user_id: 0, workout_exercises: [{id: 0, name: ''}], reviews: [{rating: 0}]}])
   const [myWorkouts, setMyWorkouts] = useState<{id: number, name: string, time: number, user_id: number, workout_exercises: {id: number, name: string}[], reviews: {rating: number}[]}[]>([{id: 0, name: '', time: 0, user_id: 0, workout_exercises: [{id: 0, name: ''}], reviews: [{rating: 0}]}])
 
-  let cow = Number(sessionStorage.getItem('user_id'))
+  let browserUser = Number(sessionStorage.getItem('user_id'))
+
+  const {user} = useContext(UserContext)
 
   useEffect(() => {
     fetch("/workouts").then((response) => {
       if (response.ok) {
-        response.json().then((user) => 
+        response.json().then((workouts) => 
         {
-          setWorkoutList(user)
+          setWorkoutList(workouts)
         });
       }
     });
 
-    fetch(`/user_workouts/${cow}`).then((response) => {
+    fetch(`/user_workouts/${browserUser}`).then((response) => {
       if (response.ok) {
-        response.json().then((user) => 
+        response.json().then((workouts) => 
         {
-          console.log(user)
-          setMyWorkouts(user)
+          console.log(workouts)
+          setMyWorkouts(workouts)
         });
       }
     });
 
-
-  }, []);
+  }, [browserUser]);
 
   return (
 

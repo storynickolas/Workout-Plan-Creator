@@ -21,9 +21,10 @@ const UserContextProvider = (props: ContainerProps) => {
 
   const [user, setUser] = useState<{id: number, username: string, schedule: {id: number}, saved_workouts: { id: number, name: string, workout_id: number }[]}>({id: 0, username: '', schedule: {id: 0}, saved_workouts: [{ id: 0, name: "test", workout_id: 0 }]})
 
-  let cow = sessionStorage.getItem('user_id')
+  let browserUser = sessionStorage.getItem('user_id')
 
   useEffect(() => {
+    console.log('Workout Days')
     fetch(`/users/${sessionStorage.getItem('user_id')}`).then((response) => {
       if (response.ok) {
         response.json().then((user) => 
@@ -32,7 +33,7 @@ const UserContextProvider = (props: ContainerProps) => {
         });
       }
     });
-  }, [cow]);
+  }, [browserUser]);
 
 
 

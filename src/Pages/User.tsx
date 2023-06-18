@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { Card, Button, CardBody, Text, Stack, SimpleGrid, Spinner, Divider, Box, TableContainer, Tr, Td, Table, VStack } from '@chakra-ui/react'
+import { Card, Button, CardBody, Text, Stack, SimpleGrid, Spinner, Divider, Box, TableContainer, Tr, Td, Table, VStack, AccordionItem, Accordion, AccordionButton, AccordionPanel, AccordionIcon } from '@chakra-ui/react'
 import { useHistory } from 'react-router-dom'
 import { UserContext } from '../Context/User.context';
 import { InfoOutlineIcon } from '@chakra-ui/icons'
@@ -8,12 +8,13 @@ import { SavedContext } from '../Context/Saved.context';
 import { WorkoutContext } from '../Context/Workout.context';
 
 
+
 function User() {
 
   const [ww, setWw] = useState([{day: "Sunday"}, {day: "Monday"}, {day: "Tuesday"}, {day: "Wednesday"}, {day: "Thursday"}, {day: "Friday"}, {day: "Saturday"}])
   const {user, setUser} = useContext(UserContext)
 
-  console.log(user)
+  // console.log(user)
 
   const {workoutList, setWorkoutList, myWorkouts, setMyWorkouts} = useContext(WorkoutContext)
 
@@ -99,10 +100,8 @@ function User() {
 
   }, []);
 
-  let browserUser = sessionStorage.getItem('user_id')
-
   return (
-    <Box bg='grey' w='100%' maxH='85vh' p={4} color='white' position='inherit' overflowY={'scroll'} >
+    <Box bg='grey' w='100%' minH='85vh' maxH='85vh' p={4} color='white' position='inherit' overflowY={'scroll'} >
 
       {user.username !== '' ?
       <Box>
@@ -145,62 +144,81 @@ function User() {
             </Table>
           </TableContainer>
         </Box>
-        <Text fontSize={'4xl'} as='u'>
-          Saved Workouts
-        </Text>
-        <SimpleGrid minChildWidth='300px' spacing='10px' overflowY={'scroll'} maxH={'80vh'}>
-          {savedList[0]?.workout?.name ? savedList.map((item: any) => 
-            <Card >
-              <CardBody>
-                <Text fontSize='2xl'>
-                  {item.workout.name}
-                </Text>
-                <Text fontSize='md'>
-                  {item.workout.time} Minutes
-                </Text>
-                <Stack direction='row' spacing='10px' justify={'center'}>
-                  <Button leftIcon={<InfoOutlineIcon/>} onClick={() => history.push(`/workouts/${item.workout_id}`, {redirect})} colorScheme='teal' variant='solid'>
-                    More Info
-                  </Button>
-                  <Button onClick={() => handleRemove(item)}>
-                    Remove
-                  </Button>
-                </Stack>
-              </CardBody>
-            </Card> 
-          ) : '' } 
-        </SimpleGrid>
-        <Text fontSize={'4xl'} as='u'>
-          My Workouts
-        </Text>
-        <SimpleGrid minChildWidth='300px' spacing='10px' overflowY={'scroll'} maxH={'80vh'}>
-          {myWorkouts[0]?.name !== ''  ? myWorkouts.map((item : any) => 
-            <Card >
-              <CardBody>
-                <Text fontSize='2xl'>
-                  {item.name}
-                </Text>
-                <Text fontSize='md'>
-                  {item.time} Minutes
-                </Text>
-                <Stack direction='row' spacing='10px' justify={'center'}>
-                  <Button leftIcon={<InfoOutlineIcon/>} onClick={() => history.push(`/workouts/${item.id}`, {redirect})} colorScheme='teal' variant='solid'>
-                    More Info
-                  </Button>
-                  <EditButton item={item} />
-                  <Button onClick={() => handleDelete(item)}>
-                    Delete
-                  </Button>
-                </Stack>
-              </CardBody> 
-            </Card> 
-          ) : '' }
-        </SimpleGrid>
+        <Accordion>
+          <AccordionItem>
+          <AccordionButton>
+            <Box as="span" flex='1' >
+              <Text fontSize={'4xl'} as='u'>
+                Saved Workouts
+              </Text>
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel>
+            <SimpleGrid minChildWidth='300px' spacing='10px' overflowY={'scroll'} maxH={'80vh'}>
+              {savedList[0]?.workout?.name ? savedList.map((item: any) => 
+                <Card >
+                  <CardBody>
+                    <Text fontSize='2xl'>
+                      {item.workout.name}
+                    </Text>
+                    <Text fontSize='md'>
+                      {item.workout.time} Minutes
+                    </Text>
+                    <Stack direction='row' spacing='10px' justify={'center'}>
+                      <Button leftIcon={<InfoOutlineIcon/>} onClick={() => history.push(`/workouts/${item.workout_id}`, {redirect})} colorScheme='teal' variant='solid'>
+                        More Info
+                      </Button>
+                      <Button onClick={() => handleRemove(item)}>
+                        Remove
+                      </Button>
+                    </Stack>
+                  </CardBody>
+                </Card> 
+              ) : '' } 
+              </SimpleGrid>
+            </AccordionPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <AccordionButton>
+              <Box as="span" flex='1' >
+                <Text fontSize={'4xl'} as='u'>My Workouts</Text>
+              </Box>
+            <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel>
+              <SimpleGrid minChildWidth='300px' spacing='10px' overflowY={'scroll'} maxH={'80vh'}>
+                {myWorkouts[0]?.name !== ''  ? myWorkouts.map((item : any) => 
+                  <Card >
+                    <CardBody>
+                      <Text fontSize='2xl'>
+                        {item.name}
+                      </Text>
+                      <Text fontSize='md'>
+                        {item.time} Minutes
+                      </Text>
+                      <Stack direction='row' spacing='10px' justify={'center'}>
+                        <Button leftIcon={<InfoOutlineIcon/>} onClick={() => history.push(`/workouts/${item.id}`, {redirect})} colorScheme='teal' variant='solid'>
+                          More Info
+                        </Button>
+                        <EditButton item={item} />
+                        <Button onClick={() => handleDelete(item)}>
+                          Delete
+                        </Button>
+                      </Stack>
+                    </CardBody> 
+                  </Card> 
+                ) : ''}
+              </SimpleGrid>
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
       </Box> 
       : 
+      <Box minH={'82vh'}>
       <Text>
       Please Log In
-      </Text> } 
+      </Text> </Box>} 
     </Box>
   );
 }

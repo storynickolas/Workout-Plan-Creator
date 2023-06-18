@@ -43,6 +43,7 @@ const SavedContextProvider = (props: ContainerProps) => {
   let browserUser = sessionStorage.getItem('user_id')
 
   useEffect(() => {
+    console.log('Saved ')
     fetch(`/users/${sessionStorage.getItem('user_id')}`).then((response) => {
       if (response.ok) {
         response.json().then((user) => 
@@ -60,7 +61,7 @@ const SavedContextProvider = (props: ContainerProps) => {
         });
       }
     });
-  }, [browserUser, user]);
+  }, [browserUser]);
 
   function handleRemove(sid : number) {
     let removeIndex = sidList[sid]

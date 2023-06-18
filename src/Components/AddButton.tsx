@@ -54,7 +54,7 @@ function AddButton({ handleNew } : {handleNew : (response: {id: number, name: st
   return (
     <>
 
-      <Button onClick={onOpen} color='black'>Add a Workout</Button>
+      <Button onClick={onOpen} color='black'>Get Started Here</Button>
 
       <Modal
         isOpen={isOpen}

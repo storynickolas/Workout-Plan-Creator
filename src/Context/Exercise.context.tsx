@@ -49,6 +49,7 @@ const ExerciseContextProvider = (props: ContainerProps) => {
   const [selected, setSelected] = useState< (string | boolean)[] | [] >([])
 
   useEffect(() => {
+    console.log('Workouts')
     if(allExercises[0].name === '') {
       fetch("/exercises").then((response) => {
         if (response.ok) {
@@ -78,7 +79,7 @@ const ExerciseContextProvider = (props: ContainerProps) => {
       newList = newList.filter(function(listItem) {return listItem.muscle_group === sgroup})
       setSearched(newList)
     }
-  }, [search, sgroup]);
+  }, [allExercises, search, sgroup]);
 
 
 

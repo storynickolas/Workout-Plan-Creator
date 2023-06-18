@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Button, Input, Card, Text, Switch, Box, Center, Flex, Table, Thead, Tr, Td, Tbody, Heading, Select, Grid, GridItem} from '@chakra-ui/react'
+import { Button, Input, Card, Text, Switch, Box, Stack, Center, Flex, Table, Thead, Tr, Td, Tbody, Heading, Select, Grid, GridItem} from '@chakra-ui/react'
 import AddButton from '../Components/AddButton';
 
 import { ExerciseContext } from '../Context/Exercise.context';
@@ -16,6 +16,7 @@ function NewProgram() {
   const history = useHistory();
 
   const {workoutList, setWorkoutList} = useContext(WorkoutContext)
+  const {exercises} = useContext(ExerciseContext)
 
   interface dataType {
     item: {id: number, name: string, time: number, user_id: number, workout_exercises: any[]}
@@ -49,7 +50,11 @@ function NewProgram() {
     //Add Exercise to Workout
     e.preventDefault()
     let newList = [...list]
+    console.log(newList)
     if(newList[0]?.exercise_id === 0){
+      console.log(newW)
+      console.log(pos)
+      console.log(allExercises)
       newList[0] = {name: moving, exercise_id: allExercises[pos].id, workout_id: newW.id, reps: 12, sets: 4, status: false, user_id: Number(sessionStorage.getItem('user_id'))}
     }
     else{
@@ -136,10 +141,9 @@ function NewProgram() {
         setWorkoutList([...updatedList])
         console.log('end');
 
-      }
+        }
     });
-  }
-    
+      }
     
     //Make Exercise Draggable Again
     const pos = allExercises.map(e => e.name).indexOf(item.name)
@@ -148,30 +152,28 @@ function NewProgram() {
     setSelected(currentExercises)
   }
 
-  function handleSwitch(donkey: any, cow: number) {
-    console.log(donkey)
+  function handleSwitch(exerciseItem: any, position: number) {
     let newList = [...list]
-    let newitem = donkey
+    let newitem = exerciseItem
     newitem.status = true
-    newList[cow] = newitem
+    newList[position] = newitem
     setList([...newList])
 
- let dog = {
-      exercise_id: donkey.exercise_id,
-      workout_id: donkey.workout_id,
-      reps: donkey.reps,
-      sets: donkey.sets, 
-
+    let newExercise = {
+      exercise_id: exerciseItem.exercise_id,
+      workout_id: exerciseItem.workout_id,
+      reps: exerciseItem.reps,
+      sets: exerciseItem.sets, 
     }
 
-    if(donkey.id) {
-      fetch(`/workout_exercises/${donkey.id}`, {
+    if(exerciseItem.id) {
+      fetch(`/workout_exercises/${exerciseItem.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
-        body: JSON.stringify(dog),
+        body: JSON.stringify(newExercise),
       })
         .then((response) => response.json())
         .then((response) => {
@@ -179,70 +181,40 @@ function NewProgram() {
             console.log(response.errors)
           }
           else {
-            console.log('success')
+            /// Find index of workout on myWorkout List
+            let workoutIndex : number[] = []
+            workoutList.forEach((item) => {
+              if(item.name === newW.name) {
+                workoutIndex.push(workoutList.indexOf(item))
+          
+              }
+            })
+            /// Workout in quesiton
+            let wItem = workoutList[workoutIndex[0]]
 
-                    /// Find index of workout on myWorkout List
-       
-        let bat : number[] = []
+            /// workout exercises of workout
+            let wExercises = wItem.workout_exercises
 
-        workoutList.forEach((item) => {
-          if(item.name === newW.name) {
-            bat.push(workoutList.indexOf(item))
-      
+            /// find index of workout exercise
+            let wIndex : number[] = []
+            wExercises.forEach((ex, index) => {
+              console.log(ex)
+              if(ex.id === response[0].id){
+                console.log(ex)
+                wIndex.push(index)
+              }
+            })
+
+            /// remove index from workout exercises
+            wExercises = [...wExercises.slice(0, wIndex[0]), response[0], ...wExercises.slice(wIndex[0] + 1, wExercises.length)]
+            wItem.workout_exercises = [...wExercises]
+
+            /// Add updated workout back into list
+            let updatedList = [...workoutList]
+            updatedList[workoutIndex[0]] = wItem
+            setWorkoutList([...updatedList])
           }
         })
-
-        console.log('start')
-
-        /// Workout in quesiton
-
-        let fly = workoutList[bat[0]]
-
-        /// workout exercises of workout
-        
-        let cow = fly.workout_exercises
-
-        /// find index of workout exercise
-
-        let possum : number[] = []
-
-        cow.forEach((ex, index) => {
-          console.log(ex)
-          if(ex.id === response[0].id){
-            console.log(ex)
-            possum.push(index)
-          }
-        })
-
-        /// remove index from workout exercises
-
-        console.log(possum[0])
-
-        console.log(response)
-
-        cow = [...cow.slice(0, possum[0]), response[0], ...cow.slice(possum[0] + 1, cow.length)]
-
-        fly.workout_exercises = [...cow]
-
-        /// Add updated workout back into list
-
-        let turtle = [...workoutList]
-
-        turtle[bat[0]] = fly
-
-        console.log([...turtle])
-
-        setWorkoutList([...turtle])
-    
-        console.log('end');
-      
-
-
-
-
-          }
-        })
-
     }
     else {
       fetch(`/workout_exercises`, {
@@ -251,7 +223,7 @@ function NewProgram() {
         "Content-Type": "application/json",
         "Accept": "application/json",
       },
-      body: JSON.stringify(dog),
+      body: JSON.stringify(newExercise),
     })
       .then((response) => response.json())
       .then((response) => {
@@ -259,83 +231,61 @@ function NewProgram() {
           console.log(response.errors)
         }
         else {
-          console.log(response)
-
-          let bat : number[] = []
-
+          let workoutIndex : number[] = []
           workoutList.forEach((item) => {
             if(item.name === newW.name) {
-              bat.push(workoutList.indexOf(item))
-        
+              workoutIndex.push(workoutList.indexOf(item))
             }
           })
-
-          console.log('start')
-
           /// Workout in quesiton
-  
-          let fly = workoutList[bat[0]]
+          let wItem = workoutList[workoutIndex[0]]
   
           /// workout exercises of workout
-          
-          let cow = fly.workout_exercises
-
-          cow.push(response)
-  
-          fly.workout_exercises = [...cow]
+          let wExercises = wItem.workout_exercises
+          wExercises.push(response)
+          wItem.workout_exercises = [...wExercises]
   
           /// Add updated workout back into list
-  
-          let turtle = [...workoutList]
-  
-          turtle[bat[0]] = fly
-  
-          setWorkoutList([...turtle])
-      
-          console.log('end');
-
+          let updatedList = [...workoutList]
+          updatedList[workoutIndex[0]] = wItem
+          setWorkoutList([...updatedList])
         }
       })
     }    
   }
 
-  function handleReps(e: React.ChangeEvent<any>, donkey: any, cow: number) {
+  function handleReps(e: React.ChangeEvent<any>, newReps: any, repsInd: number) {
     let newList = [...list]
-    let newitem = donkey
+    let newitem = newReps
     newitem.reps = Number(e.target.value)
-    newList[cow] = newitem
+    newList[repsInd] = newitem
     setList([...newList])
   }
 
-  function handleSets(e: React.ChangeEvent<any>, donkey: any, cow: number) {
+  function handleSets(e: React.ChangeEvent<any>, newSets: any, setsInd: number) {
     let newList = [...list]
-    let newitem = donkey
+    let newitem = newSets
     newitem.sets = Number(e.target.value)
-    newList[cow] = newitem
+    newList[setsInd] = newitem
     setList([...newList])
   }
 
   useEffect(() => {
 
     let res = new Array(allExercises.length).fill(true)
-    console.log(res)
     setSelected(res)
-
-    console.log(newW)
-    console.log(list)
 
   }, []);
 
   function enableEdit(item: any) {
     console.log(item)
-    let tiger = [...list]
-    let cow = tiger.indexOf(item)
-    tiger[cow].status = false
-    setList([...tiger])
+    let listCopy = [...list]
+    let editIndex = listCopy.indexOf(item)
+    listCopy[editIndex].status = false
+    setList([...listCopy])
   }
 
   useEffect(() => {
-
     let manta = [...selected]
     let allItems = [...allExercises]
     let ray : number[] = []
@@ -357,31 +307,39 @@ function NewProgram() {
 
   }, [data, list])
 
-
+  let browserUser = Number(sessionStorage.getItem('user_id'))
 
   return (
     
 
-    <Box bg='grey' w='100%' h='100%' minH={'85vh'} p={4} color='white'>
-      <Box bg='teal' >
+    <Box bg='grey' w='100%' minH={'100vh'} p={4} color='white'>
+      <Box bg='black' >
         {clicked && newW.name !== '' ? <Text fontSize='6xl'>{newW.name}</Text> : ''}
         {clicked && newW.name !== '' ? <Text fontSize='4xl'>{newW.time} minutes</Text> : ''}
       </Box>
+      {browserUser === 0 ? '' :
+      <Box bg='black' >
+        {clicked && newW.name !== '' ? '' : <Text fontSize='6xl'>Create a Workout Below</Text> }
+        {clicked && newW.name !== '' ? '' : <Text fontSize='4xl'>Add Exercises from List</Text>}
+      </Box>}
 
-      {Number(sessionStorage.getItem('user_id')) === 0 ? 
-        <Grid h='80vh' gap={4}> 
+      {browserUser === 0 ? 
+        <Grid maxH='80vh' gap={4}> 
           <GridItem  bg='teal' >
-            <Center>Log In</Center>
+            <Stack>
+              <Text fontSize='4xl'>Please Log In To Create a Workout</Text>
+              <Button onClick={() => history.push('/login')} color='black' maxW={'50%'} alignSelf={'center'}>Login</Button>
+             </Stack>
           </GridItem>
         </Grid>
         :
-        <Grid h='200px' templateRows='repeat(2, 1fr)' templateColumns='repeat(5, 1fr)' gap={4}>
-          <GridItem rowSpan={2} colSpan={1} bg='teal' maxH='80vh' >
+        <Grid h='200px' templateRows='repeat(2, 1fr)' templateColumns='repeat(5, 1fr)' gap={4} >
+          <GridItem rowSpan={2} colSpan={1} bg='teal' maxH='70vh' >
             <Box padding={4} >
               <Heading>Exercises</Heading>
               <Input placeholder='Search...' bgColor={'white'} color='black' onChange={(e) => setSearch(e.target.value)} defaultValue={search}/>
-              <Box overflowY="auto" maxHeight="60vh">
-                <Table variant="simple" colorScheme="teal">
+              <Box overflowY="auto" maxHeight="50vh">
+                <Table variant="simple" colorScheme="grey">
                   <Thead position="sticky" top={0} bgColor="grey">
                     <Select onChange={(e) =>  setSgroup(e.target.value)} defaultValue={sgroup} >
                       {
@@ -400,7 +358,7 @@ function NewProgram() {
                         <Text 
                           fontSize='2xl'  
                           draggable={selected[index] === true ? true : false} 
-                          onDrag={() => setMoving(searched[index].name)}
+                          onDrag={() => setMoving(allExercises[index].name)}
                           >{item.name}
                         </Text>
                       </Td>
@@ -411,8 +369,8 @@ function NewProgram() {
               </Box>
                 </Box>
             </GridItem>
-            <GridItem rowSpan={2} colSpan={4} bg='teal'  minH='80vh'>
-            <Box padding={4} overflowY={'scroll'} maxH={'80vh'}>
+            <GridItem rowSpan={2} colSpan={4} bg='teal' minH='70vh'  maxH='60vh'>
+            <Box padding={4} overflowY={'scroll'} h={'80vh'}>
               <Box bg={'red'}  w='100%' >
               </Box>
               <Box overflow={'scroll'} > 
@@ -457,11 +415,8 @@ function NewProgram() {
                 </Card> 
               : ''}
               {newW.name === '' ?
-                <Flex flexDirection="column" width="100wh" height="80vh" bgColor='teal' justifyContent="center" alignItems="center">
+                <Flex flexDirection="column" width="100wh" height="68vh" bgColor='teal' justifyContent="center" alignItems="center">
                   <Box minW='30vw' p="1rem" backgroundColor="white" border='2px' borderColor='black'>
-                    <Text color='black' fontSize='3xl'>
-                      Click Below to Create A Workout
-                    </Text>
                     {clicked ? '' : 
                       <AddButton handleNew={handleNew} />
                     }
