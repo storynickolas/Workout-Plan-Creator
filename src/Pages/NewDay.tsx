@@ -12,6 +12,7 @@ import weights from '../Weights.jpg';
 import { useHistory } from 'react-router-dom'
 import { UserContext } from '../Context/User.context';
 import { ScheduleContext } from "../Context/Schedule.context";
+import { SavedContext } from "../Context/Saved.context";
 
 const NewDay = () => {
 
@@ -22,6 +23,7 @@ const NewDay = () => {
 
   const {user} = useContext(UserContext)
   const {schedule, setSchedule} = useContext(ScheduleContext)
+  const {savedList} = useContext(SavedContext)
 
   let typicalWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
@@ -81,7 +83,7 @@ const NewDay = () => {
         <Text>Select from saved workouts</Text>
         <Select placeholder='Workout' onChange={(e) => handleChange(e.target.value)}>
         {
-       data?.saved.length !== 0  ? data.saved.map((item: any) => 
+       savedList.length !== 0  ? savedList.map((item: any) => 
           <option value={item.workout.id}>{item.workout.name}</option>
        ) : '' }
       

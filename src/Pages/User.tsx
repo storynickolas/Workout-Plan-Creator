@@ -16,8 +16,6 @@ function User() {
   const {schedule, setSchedule} = useContext(ScheduleContext)
 
   const {workoutList, setWorkoutList, myWorkouts, setMyWorkouts} = useContext(WorkoutContext)
-
-  let myWeek = [{day: "Sunday"}, {day: "Monday"}, {day: "Tuesday"}, {day: "Wednesday"}, {day: "Thursday"}, {day: "Friday"}, {day: "Saturday"}]
   
   let redirect = {path: 'myPage'}
 
@@ -35,7 +33,6 @@ function User() {
       }
     });
     history.push(`/login`);
-    setSchedule([...myWeek])
 
     sessionStorage.removeItem('user_id')
   }
@@ -78,7 +75,6 @@ function User() {
 
   return (
     <Box bg='grey' w='100%' minH='85vh' maxH='85vh' p={4} color='white' position='inherit' overflowY={'scroll'} >
-      <Button onClick={() =>  console.log(schedule)}></Button>
       {user.username !== '' ?
       <Box>
         <Box w='100%' bg='grey' paddingBottom='2%'>

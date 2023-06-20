@@ -17,7 +17,6 @@ import {
 import weights from '../Weights.jpg';
 import { useHistory } from 'react-router-dom'
 import { UserContext } from '../Context/User.context';
-import { ScheduleContext } from "../Context/Schedule.context";
 
 
 const Login = () => {
@@ -28,7 +27,6 @@ const Login = () => {
   const [username, setUsername] = useState("");
 
   const {setUser} = useContext(UserContext)
-  const {setSId} = useContext(ScheduleContext)
 
   const history = useHistory();
 
@@ -46,7 +44,6 @@ const Login = () => {
       if (r.ok) {
         r.json().then((value) => {
           if(value.schedule !== null) {
-            setSId(value.schedule.id)
             setUser({id: value.id, username: value.username, schedule: {id: value.schedule.id}, saved_workouts: value.saved_workouts})
           }
           else{

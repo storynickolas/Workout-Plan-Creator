@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
+import { UserContext } from "./User.context";
 
 type ContainerProps = {
   children: React.ReactNode; 
@@ -7,33 +8,27 @@ type ContainerProps = {
 type ScheduleContextType = {
   schedule: {day: string}[],
   setSchedule: React.Dispatch<React.SetStateAction<{day: string}[]>>
-  sId: number
-  setSId: React.Dispatch<React.SetStateAction<number>>
 }
 
 const scheduleContextState = {
   schedule: [{day: "Sunday"}, {day: "Monday"}, {day: "Tuesday"}, {day: "Wednesday"}, {day: "Thursday"}, {day: "Friday"}, {day: "Saturday"}],
   setSchedule: () => {},
-  sId: 0,
-  setSId: () => []
 }
 
 const  ScheduleContext = createContext<ScheduleContextType>(scheduleContextState)
 
-
 const ScheduleContextProvider = (props: ContainerProps) => {
 
+  const {user} = useContext(UserContext)
+
   const [schedule, setSchedule] = useState<{day: string}[]>([{day: "Sunday"}, {day: "Monday"}, {day: "Tuesday"}, {day: "Wednesday"}, {day: "Thursday"}, {day: "Friday"}, {day: "Saturday"}])
-  const [sId, setSId] = useState<number>(0)
 
   let myWeek = [{day: "Sunday"}, {day: "Monday"}, {day: "Tuesday"}, {day: "Wednesday"}, {day: "Thursday"}, {day: "Friday"}, {day: "Saturday"}]
   let typicalWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
   useEffect(() => {
 
-    console.log(sId)
-
-    fetch(`/schedules/${sId}`).then((response) => {
+    fetch(`/schedules/${user.schedule.id}`).then((response) => {
       if (response.ok) {
         response.json().then((response) => 
         {
@@ -50,11 +45,11 @@ const ScheduleContextProvider = (props: ContainerProps) => {
         });
       }
     });
-  }, [sId]);
+  }, [user]);
 
   return (
 
-    <ScheduleContext.Provider value={{schedule, setSchedule, sId, setSId} }>
+    <ScheduleContext.Provider value={{schedule, setSchedule} }>
       {props.children}
     </ScheduleContext.Provider>
   );

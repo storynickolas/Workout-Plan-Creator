@@ -56,11 +56,8 @@ function WorkoutLists( { newLength } : {newLength : number } ) {
                 { widList.includes(item.id) ?
                   <Button rightIcon={<IoHeartSharp />} colorScheme='teal' variant='outline' 
                     onClick={() => {
-                    let cow = widList.indexOf(item.id)
-                    console.log('Mario!!')
-                    console.log(cow)
-                    console.log('Luigi')
-                     handleRemove(cow, item.id)}
+                    let itemRemoving = widList.indexOf(item.id)
+                     handleRemove(itemRemoving, item.id)}
                     }>
                   Saved
                   </Button>
