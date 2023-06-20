@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   Flex,
   Button,
@@ -10,13 +10,20 @@ import {
 
 import weights from '../Weights.jpg';
 import { useHistory } from 'react-router-dom'
+import { UserContext } from '../Context/User.context';
+import { ScheduleContext } from "../Context/Schedule.context";
 
 const NewDay = () => {
 
   const history = useHistory();
-  const data = history.location.state as {day: string, saved: [], user: number}
+  const data = history.location.state as {day: string, schedule_id: number, saved: [], user: number}
 
   const [selectedWorkout, setSelectedWorkout] = useState('')
+
+  const {user} = useContext(UserContext)
+  const {schedule, setSchedule} = useContext(ScheduleContext)
+
+  let typicalWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
 
   function handleChange(option : string) {
@@ -27,7 +34,7 @@ const NewDay = () => {
     let newProgram = {
       'day': data.day,
       'workout_id': Number(selectedWorkout),
-      'schedule_id': data.user
+      'schedule_id': user.schedule.id
     }
     fetch(`/workout_days`, {
       method: "POST",
@@ -43,7 +50,10 @@ const NewDay = () => {
           console.log(response.errors)
         }
         else {
-          console.log(response)
+          let day = typicalWeek.indexOf(response.day)
+          let newWeek = [...schedule]
+          newWeek[day] = response
+          setSchedule([...newWeek])
           history.replace(`/mypage`)
         }
       })

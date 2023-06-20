@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useContext } from 'react';
 import { Card, Button, CardBody, Text, Stack, SimpleGrid, Spinner, Divider, Box, TableContainer, Tr, Td, Table, VStack, AccordionItem, Accordion, AccordionButton, AccordionPanel, AccordionIcon } from '@chakra-ui/react'
 import { useHistory } from 'react-router-dom'
 import { UserContext } from '../Context/User.context';
@@ -6,29 +6,25 @@ import { InfoOutlineIcon } from '@chakra-ui/icons'
 import EditButton from '../Components/EditButton';
 import { SavedContext } from '../Context/Saved.context';
 import { WorkoutContext } from '../Context/Workout.context';
+import { ScheduleContext } from '../Context/Schedule.context';
 
 
 
 function User() {
 
-  const [ww, setWw] = useState([{day: "Sunday"}, {day: "Monday"}, {day: "Tuesday"}, {day: "Wednesday"}, {day: "Thursday"}, {day: "Friday"}, {day: "Saturday"}])
   const {user, setUser} = useContext(UserContext)
-
-  // console.log(user)
+  const {schedule, setSchedule} = useContext(ScheduleContext)
 
   const {workoutList, setWorkoutList, myWorkouts, setMyWorkouts} = useContext(WorkoutContext)
 
-
-  const week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
   let myWeek = [{day: "Sunday"}, {day: "Monday"}, {day: "Tuesday"}, {day: "Wednesday"}, {day: "Thursday"}, {day: "Friday"}, {day: "Saturday"}]
+  
   let redirect = {path: 'myPage'}
 
-  // const { username, changeUser } = useContext(UserContext);
   const history = useHistory();
 
   const {savedList, setSavedList, widList, setWidList, sidList, setSidList} = useContext(SavedContext);
 
-  // var item_value = sessionStorage.getItem("user")
 
   function handleLogoutClick() {
     fetch("/logout", { method: "DELETE" }).then((r) => {
@@ -39,7 +35,8 @@ function User() {
       }
     });
     history.push(`/login`);
-    setWw([...myWeek])
+    setSchedule([...myWeek])
+
     sessionStorage.removeItem('user_id')
   }
 
@@ -79,30 +76,9 @@ function User() {
     });
   }
 
-
-  useEffect(() => {
-    let scheduleId = Number(sessionStorage.getItem('user_id'))
-
-    fetch(`/schedules/${scheduleId}`).then((response) => {
-      if (response.ok) {
-        response.json().then((schedule) => 
-        {
-          let newWeek = myWeek 
-          if(schedule.id !== 0 && schedule[0].workout_days.length > 0){
-            for (let i = 0; i < schedule[0].workout_days.length; i++) {
-              newWeek[week.indexOf(schedule[0].workout_days[i].day)] = schedule[0].workout_days[i]
-            }
-          }
-          setWw([...newWeek])
-        });
-      }
-    });
-
-  }, []);
-
   return (
     <Box bg='grey' w='100%' minH='85vh' maxH='85vh' p={4} color='white' position='inherit' overflowY={'scroll'} >
-
+      <Button onClick={() =>  console.log(schedule)}></Button>
       {user.username !== '' ?
       <Box>
         <Box w='100%' bg='grey' paddingBottom='2%'>
@@ -120,7 +96,7 @@ function User() {
           <TableContainer>
             <Table >
               <Tr>
-                {ww.map((item: any) => 
+                {schedule.map((item: any) => 
                   <Td textAlign={'center'} border={'2px solid'}>
                     <Text >{item.day}</Text>
                     {item.workout ? 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Flex,
   Button,
@@ -14,6 +14,7 @@ import {
 import weights from '../Weights.jpg';
 import { useHistory } from 'react-router-dom'
 import { useParams } from 'react-router-dom';
+import { ScheduleContext } from "../Context/Schedule.context";
 
 
 const WorkoutDay = () => {
@@ -21,6 +22,14 @@ const WorkoutDay = () => {
   const [plan, setPlan] = useState([{exercise: {name: ''}, reps: 0, sets: 0}]);
 
   const history = useHistory();
+
+  const {schedule, setSchedule} = useContext(ScheduleContext)
+
+  let typicalWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
+
+
+
 
 
   type IdParams = {
@@ -33,18 +42,16 @@ const WorkoutDay = () => {
   const data = history.location.state as {item: { day: string, workout_exercises: [], workout: {id: 0, name: ''}}}
 
   useEffect(() => {
-
+    console.log(data.item.day)
     fetch(`/workouts/${Number(data.item.workout.id)}`).then((response) => {
       if (response.ok) {
         response.json().then((user) => 
         {
           setPlan(user[0].workout_exercises)
           console.log(user[0].workout_exercises)
-
         });
       }
     });
-
   }, []);
 
   function handleDelete() {
@@ -52,7 +59,10 @@ const WorkoutDay = () => {
       method: "DELETE",
     }).then((r) => {
       if (r.ok) {
-        // dispatch(remove(myreview))
+        let day = typicalWeek.indexOf(data.item.day)
+        let newWeek = [...schedule]
+        newWeek[day] = {'day': data.item.day}
+        setSchedule([...newWeek])
         console.log('Removed')
         history.replace(`/mypage`)
       }

@@ -24,6 +24,8 @@ const Signup = () => {
 
   const [success, setSuccess] = useState(false);
 
+  const [error, setError] = useState({errors: ''});
+
 
   const handleShowClick = () => setShowPassword(!showPassword);
 
@@ -45,10 +47,16 @@ const Signup = () => {
         password,
         password_confirmation: passwordConfirmation,
       }),
-    }).then((r) => {
-      if (r.ok) {
+    }).then((response) => response.json())
+    .then((response) => {
+      if(response.errors) {
+        setError(response)
+      }
+      else {
         setSuccess(true)
     }});
+    
+
   }
 
   return (
@@ -130,6 +138,7 @@ const Signup = () => {
               >
                 Sign Up
               </Button>
+              {error.errors !== '' ? <Text>{error.errors}</Text> : ''}
             </Stack>
           </form>
       </Box>   }   

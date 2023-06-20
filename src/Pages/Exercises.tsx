@@ -34,8 +34,6 @@ function Exercises() {
       <SimpleGrid columns={1} >
         <Center w='100%' bg='black'>
         <Box bg='teal' width='600px'>
-      
-
           <Box minH={'30vh'} >
           <AspectRatio maxW='1000px' ratio={5 / 3}>
           <iframe  src={selected.video} width="100%" title="YouTube video player" />
@@ -63,8 +61,6 @@ function Exercises() {
         <SimpleGrid
         background='grey'
          maxH='40vh' gridAutoColumns='minmax(200px, 100px)' autoFlow='column' overflowX={'auto'} padding={10} gap={6}>
-
-         
         {
           searched.map((item) => 
             <Card minH='25vh' maxW='200px' onClick={() => handleClick(item)} cursor='pointer' alignContent={'center'} justifyContent={'center'}>

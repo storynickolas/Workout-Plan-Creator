@@ -18,6 +18,7 @@ import { ExerciseContextProvider } from './Context/Exercise.context'
 import WorkoutDay from './Pages/WorkoutDay';
 import NewDay from './Pages/NewDay';
 import { SavedContextProvider } from './Context/Saved.context';
+import { ScheduleContextProvider } from './Context/Schedule.context';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
     <WorkoutContextProvider>
     <ExerciseContextProvider>
     <SavedContextProvider>
+    <ScheduleContextProvider>
 
     <Box className="App" >
       <Box bg='black' position='sticky' top='0'> 
@@ -70,6 +72,7 @@ function App() {
       </Switch>
     </Box>
 
+    </ScheduleContextProvider>
     </SavedContextProvider>
     </ExerciseContextProvider>
     </WorkoutContextProvider>
