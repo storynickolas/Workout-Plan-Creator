@@ -59,11 +59,13 @@ function Workout( ) {
     
     let cow: any = workoutList[pos]
     setSWorkout(cow)
-    setVideo(sWorkout.workout_exercises[0].exercise.video)
-    setName(sWorkout.workout_exercises[0].exercise.name)
+    setVideo(cow.workout_exercises[0].exercise.video)
+    setName(cow.workout_exercises[0].exercise.name)
     }
 
   }, [workoutList] )
+
+  console.log(video)
 
   
   return (
